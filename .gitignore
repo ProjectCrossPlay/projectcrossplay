@@ -1,0 +1,11 @@
+node_modules/
+dist/
+*.tsbuildinfo
+*.log
+
+# spike artifacts (downloaded, not sources)
+spikes/uia2-bridge/*.tgz
+spikes/uia2-bridge/package/
+
+# traces & local outputs
+.crossplay/

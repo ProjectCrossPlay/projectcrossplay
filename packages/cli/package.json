@@ -1,0 +1,19 @@
+{
+  "name": "@crossplay/cli",
+  "version": "0.1.0-dev.0",
+  "description": "CrossPlay cli (implementation lands per sprint plan)",
+  "license": "Apache-2.0",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": ["dist"],
+  "engines": { "node": ">=20" },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "echo 'no tests yet'",
+    "lint": "echo 'lint configured in Sprint 2'"
+  },
+  "dependencies": { "@crossplay/core": "workspace:*" },
+  "devDependencies": { "typescript": "^5.5.4" }
+}

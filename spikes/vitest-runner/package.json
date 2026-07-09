@@ -1,0 +1,16 @@
+{
+  "name": "@crossplay/spike-vitest-runner",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "build": "echo 'spike: no build'",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "test": "vitest run --reporter=./reporter.mjs",
+    "lint": "echo 'spike: no lint'"
+  },
+  "devDependencies": {
+    "typescript": "^5.5.4",
+    "vitest": "^2.1.9"
+  }
+}

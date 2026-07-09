@@ -1,0 +1,28 @@
+name: CI
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  build-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm typecheck
+      - run: pnpm build
+      - run: pnpm test
+      # Supply-chain gate (NFR-015): fail on high/critical advisories
+      - run: pnpm audit --audit-level high
+
+  # Sprint 4 (B-042) extends this file with:
+  # - web demo matrix: browser [chromium, firefox, webkit]  (FR-012)
+  # - android emulator job via reactivecircus/android-emulator-runner (FR-080)
+  # - trace artifact upload on failure (FR-081)
+  # - nightly 50-run flake job + soak/leak job (NFR-001/013/014)
