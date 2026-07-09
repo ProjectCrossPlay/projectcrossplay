@@ -1,0 +1,262 @@
+{
+  "target": "android-kotlin",
+  "runs": 50,
+  "failed": 0,
+  "flakeRate": 0,
+  "p50Ms": 30269,
+  "p95Ms": 31907,
+  "maxMs": 32591,
+  "finishedAt": "2026-07-09T16:36:06.367Z",
+  "results": [
+    {
+      "run": 1,
+      "pass": true,
+      "durationMs": 30914
+    },
+    {
+      "run": 2,
+      "pass": true,
+      "durationMs": 30735
+    },
+    {
+      "run": 3,
+      "pass": true,
+      "durationMs": 31007
+    },
+    {
+      "run": 4,
+      "pass": true,
+      "durationMs": 32591
+    },
+    {
+      "run": 5,
+      "pass": true,
+      "durationMs": 30847
+    },
+    {
+      "run": 6,
+      "pass": true,
+      "durationMs": 29197
+    },
+    {
+      "run": 7,
+      "pass": true,
+      "durationMs": 30516
+    },
+    {
+      "run": 8,
+      "pass": true,
+      "durationMs": 30169
+    },
+    {
+      "run": 9,
+      "pass": true,
+      "durationMs": 30516
+    },
+    {
+      "run": 10,
+      "pass": true,
+      "durationMs": 29368
+    },
+    {
+      "run": 11,
+      "pass": true,
+      "durationMs": 31160
+    },
+    {
+      "run": 12,
+      "pass": true,
+      "durationMs": 31201
+    },
+    {
+      "run": 13,
+      "pass": true,
+      "durationMs": 31649
+    },
+    {
+      "run": 14,
+      "pass": true,
+      "durationMs": 32085
+    },
+    {
+      "run": 15,
+      "pass": true,
+      "durationMs": 29739
+    },
+    {
+      "run": 16,
+      "pass": true,
+      "durationMs": 30269
+    },
+    {
+      "run": 17,
+      "pass": true,
+      "durationMs": 30316
+    },
+    {
+      "run": 18,
+      "pass": true,
+      "durationMs": 30790
+    },
+    {
+      "run": 19,
+      "pass": true,
+      "durationMs": 29858
+    },
+    {
+      "run": 20,
+      "pass": true,
+      "durationMs": 31907
+    },
+    {
+      "run": 21,
+      "pass": true,
+      "durationMs": 29318
+    },
+    {
+      "run": 22,
+      "pass": true,
+      "durationMs": 29334
+    },
+    {
+      "run": 23,
+      "pass": true,
+      "durationMs": 29531
+    },
+    {
+      "run": 24,
+      "pass": true,
+      "durationMs": 30730
+    },
+    {
+      "run": 25,
+      "pass": true,
+      "durationMs": 29860
+    },
+    {
+      "run": 26,
+      "pass": true,
+      "durationMs": 29994
+    },
+    {
+      "run": 27,
+      "pass": true,
+      "durationMs": 30652
+    },
+    {
+      "run": 28,
+      "pass": true,
+      "durationMs": 30658
+    },
+    {
+      "run": 29,
+      "pass": true,
+      "durationMs": 30149
+    },
+    {
+      "run": 30,
+      "pass": true,
+      "durationMs": 29552
+    },
+    {
+      "run": 31,
+      "pass": true,
+      "durationMs": 30553
+    },
+    {
+      "run": 32,
+      "pass": true,
+      "durationMs": 30538
+    },
+    {
+      "run": 33,
+      "pass": true,
+      "durationMs": 29268
+    },
+    {
+      "run": 34,
+      "pass": true,
+      "durationMs": 29668
+    },
+    {
+      "run": 35,
+      "pass": true,
+      "durationMs": 28821
+    },
+    {
+      "run": 36,
+      "pass": true,
+      "durationMs": 29842
+    },
+    {
+      "run": 37,
+      "pass": true,
+      "durationMs": 30432
+    },
+    {
+      "run": 38,
+      "pass": true,
+      "durationMs": 29822
+    },
+    {
+      "run": 39,
+      "pass": true,
+      "durationMs": 29581
+    },
+    {
+      "run": 40,
+      "pass": true,
+      "durationMs": 31717
+    },
+    {
+      "run": 41,
+      "pass": true,
+      "durationMs": 29445
+    },
+    {
+      "run": 42,
+      "pass": true,
+      "durationMs": 29246
+    },
+    {
+      "run": 43,
+      "pass": true,
+      "durationMs": 29064
+    },
+    {
+      "run": 44,
+      "pass": true,
+      "durationMs": 30671
+    },
+    {
+      "run": 45,
+      "pass": true,
+      "durationMs": 29894
+    },
+    {
+      "run": 46,
+      "pass": true,
+      "durationMs": 29891
+    },
+    {
+      "run": 47,
+      "pass": true,
+      "durationMs": 30727
+    },
+    {
+      "run": 48,
+      "pass": true,
+      "durationMs": 29509
+    },
+    {
+      "run": 49,
+      "pass": true,
+      "durationMs": 29947
+    },
+    {
+      "run": 50,
+      "pass": true,
+      "durationMs": 30372
+    }
+  ]
+}
