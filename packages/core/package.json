@@ -6,15 +6,38 @@
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
-  "files": ["dist"],
-  "engines": { "node": ">=20" },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./test": {
+      "types": "./dist/test-entry.d.ts",
+      "default": "./dist/test-entry.js"
+    },
+    "./global-setup": {
+      "types": "./dist/global-setup.d.ts",
+      "default": "./dist/global-setup.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "typecheck": "tsc -p tsconfig.json --noEmit",
-    "test": "echo 'no tests yet (Sprint 2)'",
+    "test": "vitest run",
     "lint": "echo 'lint configured in Sprint 2 (B-020)'"
   },
+  "peerDependencies": {
+    "vitest": "^3.2.4"
+  },
   "devDependencies": {
-    "typescript": "^5.5.4"
+    "@types/node": "^20.19.43",
+    "typescript": "^5.5.4",
+    "vitest": "^3.2.4"
   }
 }

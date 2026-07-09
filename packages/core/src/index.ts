@@ -1,10 +1,45 @@
 /**
- * @projectcrossplay/core public surface.
+ * @projectcrossplay/core public surface (fully typed, FR-002).
  *
- * v0.1.0-dev: driver contract only (M1 deliverable). The runtime — test(),
- * app, by, selector engine, auto-wait engine, trace writer — lands in Sprint 2
- * (B-020..B-025) behind this contract.
+ * This root entry is importable everywhere — config files, the CLI, driver
+ * packages. `test`/`expect` live in '@projectcrossplay/core/test' because
+ * they transitively import vitest, which only loads inside a test run.
+ *
+ * User-facing here: by, defineConfig, App, errors.
+ * Driver authors: the PlatformDriver contract types.
+ * Tooling (CLI/viewer): trace reading.
  */
+
+// The app object (B-020); `test` itself is in '@projectcrossplay/core/test'
+export { App, MASKED_VALUE } from './app.js';
+
+// Selectors (B-022)
+export { by, formatSelector } from './selector.js';
+
+// Config (B-021)
+export { defineConfig, resolveTarget, type CrossPlayConfig, type TargetDef } from './config.js';
+
+// Errors (3-part contract)
+export { CrossPlayError, TimeoutError, AmbiguityError, type ErrorParts, type WaitLogEntry } from './errors.js';
+
+// Reporter seam (FR-071)
+export type { CrossPlayReporter, ReporterEvent } from './reporter.js';
+
+// Trace (B-025, ADR-003)
+export {
+  readTrace,
+  TRACE_FORMAT_VERSION,
+  type ParsedTrace,
+  type TraceManifest,
+  type TraceStep,
+} from './trace.js';
+
+// Internal building blocks exposed for drivers/tooling
+export { DisposeScope } from './dispose.js';
+export { loadDriver } from './registry.js';
+export { waitFor as waitForElement, type WaitOptions, type WaitResult } from './wait.js';
+
+// The G5 driver contract
 export type {
   PlatformDriver,
   DriverSession,
