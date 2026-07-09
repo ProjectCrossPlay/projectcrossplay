@@ -18,8 +18,9 @@ jobs:
           node-version: 24
           cache: pnpm
       - run: pnpm install --frozen-lockfile
-      - run: pnpm typecheck
+      # build first: cross-package type resolution needs core's dist/ (topological order)
       - run: pnpm build
+      - run: pnpm typecheck
       - run: pnpm test
       # Supply-chain gate (NFR-015): fail on high/critical advisories
       - run: pnpm audit --audit-level high
