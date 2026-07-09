@@ -75,10 +75,19 @@ importers:
       '@projectcrossplay/core':
         specifier: workspace:*
         version: link:../core
+      appium-uiautomator2-server:
+        specifier: 10.3.2
+        version: 10.3.2
     devDependencies:
+      '@types/node':
+        specifier: ^20.19.43
+        version: 20.19.43
       typescript:
         specifier: ^5.5.4
         version: 5.9.3
+      vitest:
+        specifier: ^3.2.7
+        version: 3.2.7(@types/node@20.19.43)
 
   packages/driver-web:
     dependencies:
@@ -276,6 +285,10 @@ packages:
 
   '@vitest/utils@3.2.7':
     resolution: {integrity: sha512-x6BDOd7dyo3PFLY3I9/HJ25X/6OurhGXk2/B9gOZNPF7XDVjeBK4k01lQE5uvDpbuheErh91qYuE1E2OEjK3Rw==}
+
+  appium-uiautomator2-server@10.3.2:
+    resolution: {integrity: sha512-We6bbBY5HoIJJ7VaQFAj95W3tdhSbOQ2fVgYSfYu7C8UN8RsXDbxxqvFZim7gd+OmUKHumN92Zk+o54k63CL8w==}
+    engines: {node: ^20.19.0 || ^22.12.0 || >=24.0.0, npm: '>=10'}
 
   assertion-error@2.0.1:
     resolution: {integrity: sha512-Izi8RQcffqCeNVgFigKli1ssklIbpHnCYc6AknXGYoB6grJqyeby7jv12JUQgmTAnIDnbck1uxksT4dzN3PWBA==}
@@ -736,6 +749,8 @@ snapshots:
       '@vitest/pretty-format': 3.2.7
       loupe: 3.2.1
       tinyrainbow: 2.0.0
+
+  appium-uiautomator2-server@10.3.2: {}
 
   assertion-error@2.0.1: {}
 

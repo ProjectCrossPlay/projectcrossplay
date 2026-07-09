@@ -114,7 +114,12 @@ export interface WebTargetOptions {
 }
 
 export interface AndroidTargetOptions {
-  apk: string;
+  /** Path to the app APK. Optional when the app is already installed and appId is set. */
+  apk?: string;
+  /** Application id (package name). Derived from the APK via aapt when omitted. */
+  appId?: string;
+  /** Fully qualified activity to launch. Default: the package's launcher activity. */
+  activity?: string;
   /** ADB serial; omit = single connected device (FR-021). */
   device?: string;
 }
