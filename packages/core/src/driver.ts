@@ -2,7 +2,7 @@
  * The CrossPlay driver contract (architecture doc §3.2, ADR-002).
  *
  * This interface is the extension boundary of the whole framework: platform
- * drivers (`@crossplay/driver-web`, `@crossplay/driver-android`, future iOS or
+ * drivers (`@projectcrossplay/driver-web`, `@projectcrossplay/driver-android`, future iOS or
  * community drivers) implement it, and core owns everything platform-neutral
  * on top of it — selector resolution policy, the auto-wait loop, tracing, and
  * error wording.

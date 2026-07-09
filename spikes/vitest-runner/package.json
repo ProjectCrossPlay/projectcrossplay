@@ -1,5 +1,5 @@
 {
-  "name": "@crossplay/spike-vitest-runner",
+  "name": "@projectcrossplay/spike-vitest-runner",
   "private": true,
   "version": "0.0.0",
   "type": "module",

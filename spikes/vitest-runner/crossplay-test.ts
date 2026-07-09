@@ -1,7 +1,7 @@
 /**
  * Spike B-003, part 1: prove the CrossPlay public API shape is expressible on
  * Vitest — `test` with an injected `app` fixture whose lifecycle (launch →
- * dispose) is owned by the fixture, exactly as @crossplay/core will do with a
+ * dispose) is owned by the fixture, exactly as @projectcrossplay/core will do with a
  * real PlatformDriver behind it.
  */
 import { test as base } from 'vitest';

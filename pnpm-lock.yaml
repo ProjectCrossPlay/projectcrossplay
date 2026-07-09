@@ -17,7 +17,7 @@ importers:
 
   packages/cli:
     dependencies:
-      '@crossplay/core':
+      '@projectcrossplay/core':
         specifier: workspace:*
         version: link:../core
     devDependencies:
@@ -33,7 +33,7 @@ importers:
 
   packages/driver-android:
     dependencies:
-      '@crossplay/core':
+      '@projectcrossplay/core':
         specifier: workspace:*
         version: link:../core
     devDependencies:
@@ -43,7 +43,7 @@ importers:
 
   packages/driver-web:
     dependencies:
-      '@crossplay/core':
+      '@projectcrossplay/core':
         specifier: workspace:*
         version: link:../core
     devDependencies:
@@ -53,7 +53,7 @@ importers:
 
   packages/trace-viewer:
     dependencies:
-      '@crossplay/core':
+      '@projectcrossplay/core':
         specifier: workspace:*
         version: link:../core
     devDependencies:
