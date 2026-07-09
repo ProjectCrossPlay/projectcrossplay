@@ -2,7 +2,7 @@
  * The CrossPlay driver contract (architecture doc §3.2, ADR-002).
  *
  * This interface is the extension boundary of the whole framework: platform
- * drivers (`@crossplay/driver-web`, `@crossplay/driver-android`, future iOS or
+ * drivers (`@projectcrossplay/driver-web`, `@projectcrossplay/driver-android`, future iOS or
  * community drivers) implement it, and core owns everything platform-neutral
  * on top of it — selector resolution policy, the auto-wait loop, tracing, and
  * error wording.
@@ -37,6 +37,19 @@ export interface DriverSession {
 
   /** Execute a primitive action on an element core has already deemed actionable. */
   performAction(el: ElementHandle, action: DriverAction): Promise<void>;
+
+  /**
+   * Read an element's visible text. Separate from performAction because
+   * actions return void by contract (fixed during B-020: the architecture
+   * draft routed getText through performAction, which cannot return data).
+   */
+  getText(el: ElementHandle): Promise<string>;
+
+  /**
+   * Optional (additive within 0.x): navigate to a URL. Web drivers implement
+   * this; app.goto() raises a clear platform error where it's absent.
+   */
+  navigate?(url: string): Promise<void>;
 
   /** Platform state capture for traces (FR-050/052). */
   captureState(kind: 'screenshot'): Promise<Uint8Array>;
@@ -86,8 +99,7 @@ export interface ElementState {
 export type DriverAction =
   | { kind: 'tap' }
   | { kind: 'fill'; value: string; /** trace masking flag, default true (NFR-017) */ mask?: boolean }
-  | { kind: 'clear' }
-  | { kind: 'getText' };
+  | { kind: 'clear' };
 
 /** One named target from crossplay.config.ts (FR-104 shape, minimal in v0.1). */
 export interface TargetConfig {

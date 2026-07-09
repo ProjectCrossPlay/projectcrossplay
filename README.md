@@ -13,7 +13,7 @@ Teams with a web + mobile product maintain two test stacks today: Playwright/Cyp
 ## What v0.1 will look like
 
 ```ts
-import { test, by, expect } from '@crossplay/core';
+import { test, by, expect } from '@projectcrossplay/core/test';
 
 test('login flow', async ({ app }) => {
   await app.fill(by.testId('username'), 'demo');
@@ -37,11 +37,11 @@ crossplay test --target=all   # same spec: Chromium + Firefox + WebKit + Android
 
 | Package | Purpose |
 |---|---|
-| [`@crossplay/core`](packages/core) | Test API, selector engine, auto-wait engine, trace writer, `PlatformDriver` contract |
-| [`@crossplay/driver-web`](packages/driver-web) | Playwright-backed driver (Chromium/Firefox/WebKit) |
-| [`@crossplay/driver-android`](packages/driver-android) | UIAutomator2-backed driver over ADB |
-| [`@crossplay/cli`](packages/cli) | `init` · `doctor` · `test` · `show-trace` |
-| [`@crossplay/trace-viewer`](packages/trace-viewer) | Local trace viewer (self-contained, localhost-only) |
+| [`@projectcrossplay/core`](packages/core) | Test API, selector engine, auto-wait engine, trace writer, `PlatformDriver` contract |
+| [`@projectcrossplay/driver-web`](packages/driver-web) | Playwright-backed driver (Chromium/Firefox/WebKit) |
+| [`@projectcrossplay/driver-android`](packages/driver-android) | UIAutomator2-backed driver over ADB |
+| [`@projectcrossplay/cli`](packages/cli) | `init` · `doctor` · `test` · `show-trace` |
+| [`@projectcrossplay/trace-viewer`](packages/trace-viewer) | Local trace viewer (self-contained, localhost-only) |
 
 The `spikes/` directory holds the validation spikes behind the architecture decisions — including live-measured UIAutomator2 session startup of **1.57s** ([results](spikes/uia2-bridge/RESULTS.md)).
 

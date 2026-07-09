@@ -1,6 +1,6 @@
 /**
  * Spike B-003, part 2: prove a custom Vitest reporter gets per-test lifecycle
- * + results — the hook point where @crossplay/core's trace writer finalizes
+ * + results — the hook point where @projectcrossplay/core's trace writer finalizes
  * trace files and the CLI prints the C3 output format.
  */
 import { DefaultReporter } from 'vitest/reporters';

@@ -1,0 +1,26 @@
+{
+  "name": "@projectcrossplay/demo-web",
+  "private": true,
+  "version": "0.0.0",
+  "description": "CrossPlay demo: login + list/detail web app and the shared spec",
+  "license": "Apache-2.0",
+  "type": "module",
+  "engines": { "node": ">=20" },
+  "scripts": {
+    "start": "node server.mjs",
+    "build": "echo 'demo: static app, no build'",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "test": "echo 'demo e2e runs via test:e2e (needs browsers installed; CI job lands in B-042)'",
+    "test:e2e": "crossplay test --target chromium",
+    "test:e2e:all": "crossplay test --target chromium,firefox,webkit",
+    "lint": "echo 'demo: no lint'"
+  },
+  "devDependencies": {
+    "@projectcrossplay/cli": "workspace:*",
+    "@projectcrossplay/core": "workspace:*",
+    "@projectcrossplay/driver-web": "workspace:*",
+    "@types/node": "^20.19.43",
+    "typescript": "^5.5.4",
+    "vitest": "^3.2.4"
+  }
+}
