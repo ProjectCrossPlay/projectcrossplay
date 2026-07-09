@@ -14,7 +14,11 @@ import { resolve } from 'node:path';
 const args = process.argv.slice(2);
 function opt(name, fallback) {
   const i = args.indexOf(`--${name}`);
-  return i >= 0 ? args[i + 1] : fallback;
+  if (i < 0) return fallback;
+  const value = args[i + 1];
+  // Missing value (flag was last arg) or the "value" is actually the next
+  // flag (e.g. `--runs --cwd x`) — both mean no value was given.
+  return value !== undefined && !value.startsWith('--') ? value : fallback;
 }
 
 const target = opt('target');
