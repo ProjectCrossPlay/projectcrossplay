@@ -22,15 +22,15 @@ test('login rejects bad credentials', async ({ app }) => {
   await app.fill(by.testId('username'), 'demo', { mask: false });
   await app.fill(by.testId('password'), 'wrong-password');
   await app.tap(by.role('button', { name: 'Sign in' }));
-  expect(await app.getText(by.testId('login-error'))).toContain('Wrong username or password');
+  expect(await app.getText(by.testId('login_error'))).toContain('Wrong username or password');
 });
 
 test('list/detail', async ({ app }) => {
   await login(app);
   // Rows fade in one by one; the last row is the flake trap (FR-041).
-  await app.tap(by.testId('item-row-5'));
-  expect(await app.getText(by.testId('detail-title'))).toBe('Doctor Kit');
-  expect(await app.getText(by.testId('detail-price'))).toBe('$9');
-  await app.tap(by.testId('back-button'));
-  await app.waitFor(by.testId('item-list'));
+  await app.tap(by.testId('item_row_5'));
+  expect(await app.getText(by.testId('detail_title'))).toBe('Doctor Kit');
+  expect(await app.getText(by.testId('detail_price'))).toBe('$9');
+  await app.tap(by.testId('back_button'));
+  await app.waitFor(by.testId('item_list'));
 });

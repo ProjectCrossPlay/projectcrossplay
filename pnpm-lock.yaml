@@ -23,6 +23,9 @@ importers:
       '@projectcrossplay/core':
         specifier: workspace:*
         version: link:../../packages/core
+      '@projectcrossplay/driver-android':
+        specifier: workspace:*
+        version: link:../../packages/driver-android
       '@projectcrossplay/driver-web':
         specifier: workspace:*
         version: link:../../packages/driver-web
