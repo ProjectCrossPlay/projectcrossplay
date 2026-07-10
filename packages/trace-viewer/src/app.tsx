@@ -35,6 +35,7 @@ export function App() {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [scrollTop, setScrollTop] = useState(0);
   const [viewportHeight, setViewportHeight] = useState(400);
+  const [screenshotUrl, setScreenshotUrl] = useState<string | null>(null);
 
   useEffect(() => {
     document.documentElement.dataset.theme = theme;
@@ -121,6 +122,21 @@ export function App() {
     return () => ro.disconnect();
   }, [trace]);
 
+  // Blob URLs must be revoked or they leak for the tab's lifetime (NFR-014) —
+  // each step change (or dropping in a new trace) creates one URL and
+  // revokes exactly the previous one, never accumulating.
+  useEffect(() => {
+    const currentStep = trace?.steps[selected];
+    if (!trace || !currentStep?.screenshot || !trace.assets.has(currentStep.screenshot)) {
+      setScreenshotUrl(null);
+      return;
+    }
+    const blob = new Blob([trace.assets.get(currentStep.screenshot)! as BlobPart], { type: 'image/png' });
+    const url = URL.createObjectURL(blob);
+    setScreenshotUrl(url);
+    return () => URL.revokeObjectURL(url);
+  }, [trace, selected]);
+
   if (error) return <EmptyState error={error} onOpen={() => fileInputRef.current?.click()} inputRef={fileInputRef} onFile={openFile} />;
   if (!trace) return <div class="stage stage-empty mono">Loading trace…</div>;
 
@@ -203,16 +219,8 @@ export function App() {
 
         <div class="main-pane">
           <div class="stage">
-            {step?.screenshot && trace.assets.has(step.screenshot) ? (
-              <img
-                alt={`step ${selected + 1} screenshot`}
-                src={URL.createObjectURL(
-                  // Our assets are always plain-ArrayBuffer-backed (decoded from a zip we
-                  // just parsed); the cast is only needed because lib.dom's BlobPart type
-                  // excludes the SharedArrayBuffer-backed Uint8Array overload.
-                  new Blob([trace.assets.get(step.screenshot)! as BlobPart], { type: 'image/png' }),
-                )}
-              />
+            {screenshotUrl ? (
+              <img alt={`step ${selected + 1} screenshot`} src={screenshotUrl} />
             ) : (
               <div class="stage-empty">no screenshot for this step</div>
             )}

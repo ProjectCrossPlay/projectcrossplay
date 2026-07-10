@@ -6,7 +6,7 @@
     "node": "^20.19.0 || ^22.12.0 || >=24.0.0"
   },
   "scripts": {
-    "build": "pnpm -r build",
+    "build": "pnpm -r build && rm -rf examples/demo-web/node_modules && pnpm install --frozen-lockfile",
     "typecheck": "pnpm -r typecheck",
     "test": "pnpm -r test",
     "lint": "pnpm -r lint"
