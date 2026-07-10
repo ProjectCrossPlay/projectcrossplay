@@ -1,8 +1,15 @@
 {
   "name": "@projectcrossplay/driver-web",
   "version": "0.1.0-dev.0",
-  "description": "CrossPlay driver-web (implementation lands per sprint plan)",
+  "description": "CrossPlay driver-web: Playwright-backed PlatformDriver for Chromium, Firefox, and WebKit",
   "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ProjectCrossPlay/projectcrossplay.git",
+    "directory": "packages/driver-web"
+  },
+  "homepage": "https://github.com/ProjectCrossPlay/projectcrossplay#readme",
+  "bugs": "https://github.com/ProjectCrossPlay/projectcrossplay/issues",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",

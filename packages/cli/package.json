@@ -3,6 +3,13 @@
   "version": "0.1.0-dev.0",
   "description": "CrossPlay CLI: init, doctor, test, show-trace",
   "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ProjectCrossPlay/projectcrossplay.git",
+    "directory": "packages/cli"
+  },
+  "homepage": "https://github.com/ProjectCrossPlay/projectcrossplay#readme",
+  "bugs": "https://github.com/ProjectCrossPlay/projectcrossplay/issues",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",

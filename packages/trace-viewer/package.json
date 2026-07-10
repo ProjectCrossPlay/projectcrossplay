@@ -1,8 +1,15 @@
 {
   "name": "@projectcrossplay/trace-viewer",
   "version": "0.1.0-dev.0",
-  "description": "CrossPlay trace-viewer: self-contained Preact bundle for crossplay show-trace (ADR-004)",
+  "description": "CrossPlay trace-viewer: self-contained Preact bundle served locally by crossplay show-trace",
   "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ProjectCrossPlay/projectcrossplay.git",
+    "directory": "packages/trace-viewer"
+  },
+  "homepage": "https://github.com/ProjectCrossPlay/projectcrossplay#readme",
+  "bugs": "https://github.com/ProjectCrossPlay/projectcrossplay/issues",
   "type": "module",
   "files": [
     "dist"
