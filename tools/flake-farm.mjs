@@ -5,7 +5,9 @@
  * 50 consecutive emulator runs.
  *
  * Usage: node tools/flake-farm.mjs --target android-kotlin [--runs 50] [--cwd examples/demo-web]
- * Exit code = number of failed runs. Report written to flake-report-<target>.json.
+ * Exit code = number of failed runs, capped at 255 (POSIX range) — the exact
+ * count is always in stdout and the report JSON. Report written to
+ * flake-report-<target>.json.
  */
 import { spawn } from 'node:child_process';
 import { writeFile } from 'node:fs/promises';
@@ -56,8 +58,8 @@ const report = {
   runs,
   failed,
   flakeRate: failed / runs,
-  p50Ms: durations[Math.floor(runs * 0.5)],
-  p95Ms: durations[Math.floor(runs * 0.95)],
+  p50Ms: durations[Math.floor((runs - 1) * 0.5)],
+  p95Ms: durations[Math.floor((runs - 1) * 0.95)],
   maxMs: durations[runs - 1],
   finishedAt: new Date().toISOString(),
   results,
@@ -66,4 +68,4 @@ const out = `flake-report-${target}.json`;
 await writeFile(out, JSON.stringify(report, null, 2));
 console.log(`\n${failed === 0 ? '✔' : '✖'} ${runs - failed}/${runs} runs passed (flake rate ${(report.flakeRate * 100).toFixed(1)}%) — p50 ${(report.p50Ms / 1000).toFixed(1)}s, p95 ${(report.p95Ms / 1000).toFixed(1)}s`);
 console.log(`report: ${out}`);
-process.exit(failed);
+process.exit(Math.min(failed, 255));

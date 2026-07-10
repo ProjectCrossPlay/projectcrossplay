@@ -38,7 +38,9 @@ export function toQueries(selector: UnifiedSelector): UIA2Query[] {
         // (RN and plain Android apps qualify differently).
         {
           strategy: '-android uiautomator',
-          selector: `new UiSelector().resourceIdMatches(".*:id/${escapeRegex(selector.value)}|${escapeRegex(selector.value)}")`,
+          // Anchored + grouped so e.g. testId('login_button') can't match
+          // 'login_button_extra' as a substring — deterministic full-string match.
+          selector: `new UiSelector().resourceIdMatches("^(?:.*:id/${escapeRegex(selector.value)}|${escapeRegex(selector.value)})$")`,
         },
         { strategy: 'accessibility id', selector: selector.value },
       ];
