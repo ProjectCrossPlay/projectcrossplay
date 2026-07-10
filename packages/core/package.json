@@ -3,13 +3,6 @@
   "version": "0.1.0-dev.0",
   "description": "CrossPlay core: unified test API, selector engine, auto-wait engine, trace writer, driver contract",
   "license": "Apache-2.0",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/ProjectCrossPlay/projectcrossplay.git",
-    "directory": "packages/core"
-  },
-  "homepage": "https://github.com/ProjectCrossPlay/projectcrossplay#readme",
-  "bugs": "https://github.com/ProjectCrossPlay/projectcrossplay/issues",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",

@@ -1,15 +1,8 @@
 {
   "name": "@projectcrossplay/driver-android",
   "version": "0.1.0-dev.0",
-  "description": "CrossPlay driver-android: UIAutomator2-backed PlatformDriver over ADB, no Appium server",
+  "description": "CrossPlay driver-android (implementation lands per sprint plan)",
   "license": "Apache-2.0",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/ProjectCrossPlay/projectcrossplay.git",
-    "directory": "packages/driver-android"
-  },
-  "homepage": "https://github.com/ProjectCrossPlay/projectcrossplay#readme",
-  "bugs": "https://github.com/ProjectCrossPlay/projectcrossplay/issues",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
