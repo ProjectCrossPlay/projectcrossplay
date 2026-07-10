@@ -18,7 +18,7 @@ npx crossplay init
 
 This creates two files (it never overwrites anything that already exists):
 
-- `crossplay.config.ts` — one `web` target pointed at `http://localhost:3000`, an `android` target commented out
+- `crossplay.config.mts` — one `web` target pointed at `http://localhost:3000`, an `android` target commented out (`.mts`, not `.ts`: it loads correctly whether or not your `package.json` sets `"type": "module"`)
 - `tests/example.spec.ts` — a one-test starting point
 
 Pass `--ci` to also scaffold a GitHub Actions workflow (`.github/workflows/crossplay.yml`).
@@ -37,9 +37,11 @@ If the web driver warns that no browser is installed:
 npx playwright install chromium
 ```
 
+On a minimal/fresh Linux machine (a bare container, a new VM) this step can take several minutes the first time — it's downloading Chromium itself plus a set of system libraries, not something CrossPlay does. It's a one-time cost per machine, not per project.
+
 ## 4. Point the config at your app
 
-Edit `crossplay.config.ts`:
+Edit `crossplay.config.mts`:
 
 ```ts
 import { defineConfig } from '@projectcrossplay/core';
@@ -94,7 +96,7 @@ This starts a local, localhost-only viewer and opens your browser to it. Traces 
 ## Adding Android
 
 1. Build a debug APK, or use one you already have.
-2. Uncomment the `android` target in `crossplay.config.ts` and point `apk` at it:
+2. Uncomment the `android` target in `crossplay.config.mts` and point `apk` at it:
    ```ts
    android: {
      platform: 'android',

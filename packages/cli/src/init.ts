@@ -56,7 +56,12 @@ jobs:
 export async function init(opts: { ci?: boolean }): Promise<number> {
   console.log('');
   const files: Array<[string, string, boolean]> = [
-    ['crossplay.config.ts', CONFIG_TEMPLATE, true],
+    // .mts, not .ts: Node's ESM loader treats a bare .ts file as CommonJS
+    // unless the nearest package.json sets "type": "module" — exactly what
+    // `npm init -y` does NOT set. .mts is unambiguous regardless (already a
+    // supported config filename in global-setup.ts's CONFIG_CANDIDATES), so
+    // the scaffolded config loads correctly for every project layout.
+    ['crossplay.config.mts', CONFIG_TEMPLATE, true],
     [join('tests', 'example.spec.ts'), SPEC_TEMPLATE, true],
     [join('.github', 'workflows', 'crossplay.yml'), CI_TEMPLATE, opts.ci === true],
   ];

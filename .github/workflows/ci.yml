@@ -117,5 +117,71 @@ jobs:
           name: traces-android
           path: examples/demo-web/.crossplay/traces
 
+  # B-051 (G3): simulates a first-time user following docs/quickstart.md
+  # against packed (not workspace-linked) packages in a directory outside the
+  # monorepo — this is the only job that would have caught the .ts/.mts
+  # config-loading bug (a bare `crossplay.config.ts` loads as CommonJS unless
+  # the nearest package.json sets "type": "module", which `npm init -y`
+  # never does; every other job runs inside this repo, where package.json
+  # already sets "type": "module", masking the exact failure a new user hits).
+  quickstart-smoke:
+    name: quickstart smoke (fresh install)
+    needs: build-test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build
+      - name: Pack publishable packages
+        run: |
+          mkdir -p /tmp/tarballs
+          for pkg in core driver-web trace-viewer cli; do
+            (cd packages/$pkg && pnpm pack --pack-destination /tmp/tarballs)
+          done
+      - name: Start demo server
+        working-directory: examples/demo-web
+        run: nohup node server.mjs > server.log 2>&1 &
+      - name: Wait for demo server
+        run: for i in $(seq 1 20); do curl -sf http://127.0.0.1:4173/ >/dev/null && exit 0; sleep 0.5; done; echo "server never came up"; exit 1
+      - name: Follow the quickstart from a fresh project
+        run: |
+          mkdir -p /tmp/quickstart-smoke && cd /tmp/quickstart-smoke
+          npm init -y >/dev/null
+          node -e "
+            const fs = require('fs');
+            const pkg = JSON.parse(fs.readFileSync('package.json'));
+            pkg.overrides = { '@projectcrossplay/trace-viewer': 'file:/tmp/tarballs/projectcrossplay-trace-viewer-0.1.0-dev.0.tgz' };
+            fs.writeFileSync('package.json', JSON.stringify(pkg, null, 2));
+          "
+          npm install -D \
+            @projectcrossplay/cli@file:/tmp/tarballs/projectcrossplay-cli-0.1.0-dev.0.tgz \
+            @projectcrossplay/core@file:/tmp/tarballs/projectcrossplay-core-0.1.0-dev.0.tgz \
+            @projectcrossplay/driver-web@file:/tmp/tarballs/projectcrossplay-driver-web-0.1.0-dev.0.tgz
+          npx crossplay init
+          test -f crossplay.config.mts # the scaffolded file must be unambiguously ESM
+          npx crossplay doctor
+          npx playwright install --with-deps chromium
+          sed -i "s|http://localhost:3000|http://127.0.0.1:4173|" crossplay.config.mts
+          node -e "
+            const fs = require('fs');
+            fs.writeFileSync('tests/example.spec.ts', [
+              \"import { by, expect, test } from '@projectcrossplay/core/test';\",
+              '',
+              \"test('login flow', async ({ app }) => {\",
+              \"  await app.fill(by.testId('username'), 'demo');\",
+              \"  await app.fill(by.testId('password'), 'crossplay');\",
+              \"  await app.tap(by.role('button', { name: 'Sign in' }));\",
+              \"  expect(await app.getText(by.testId('greeting'))).toContain('Welcome back');\",
+              '});',
+              '',
+            ].join('\n'));
+          "
+          npx crossplay test --target web
+
   # Flake farm (B-035) + soak/leak test (B-043) run nightly, not per-push —
   # see .github/workflows/nightly.yml.

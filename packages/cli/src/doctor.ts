@@ -38,13 +38,13 @@ export async function doctor(opts: { json?: boolean }): Promise<number> {
   );
 
   // Config
-  const hasConfig = ['crossplay.config.ts', 'crossplay.config.mts', 'crossplay.config.js', 'crossplay.config.mjs'].some(
+  const configFile = ['crossplay.config.ts', 'crossplay.config.mts', 'crossplay.config.js', 'crossplay.config.mjs'].find(
     (c) => existsSync(c),
   );
   checks.push(
-    hasConfig
-      ? { name: 'Config', status: 'ok', detail: 'crossplay.config.ts found', fixes: [] }
-      : { name: 'Config', status: 'fail', detail: 'no crossplay.config.ts in this directory', fixes: ['run: crossplay init'] },
+    configFile
+      ? { name: 'Config', status: 'ok', detail: `${configFile} found`, fixes: [] }
+      : { name: 'Config', status: 'fail', detail: 'no crossplay.config.{ts,mts,js,mjs} in this directory', fixes: ['run: crossplay init'] },
   );
 
   // Web driver + browsers
