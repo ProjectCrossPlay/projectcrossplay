@@ -38,10 +38,15 @@ program
 
 program
   .command('show-trace')
-  .description('summarize a .trace file')
+  .description('summarize a .trace file and open the local viewer')
   .argument('<file>', 'path to a .trace file')
-  .action(async (file: string) => {
-    process.exitCode = await showTrace(file);
+  .option('--no-open', 'print the summary only; do not start the viewer server')
+  .action(async (file: string, opts: { open: boolean }, command: Command) => {
+    // Commander defaults a --no-x flag's value to true when absent, which
+    // would defeat showTrace's TTY auto-detection default — only pass a
+    // value when the user actually typed --no-open.
+    const explicit = command.getOptionValueSource('open') === 'cli';
+    process.exitCode = await showTrace(file, explicit ? { open: opts.open } : {});
   });
 
 await program.parseAsync(process.argv);

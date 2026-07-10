@@ -183,9 +183,22 @@ class AndroidSession implements DriverSession {
   async dispose(): Promise<void> {
     if (this.disposed) return;
     this.disposed = true;
-    await this.bridge.deleteSession(); // kills instrumentation (spike finding #3)
-    await this.instrumentation.stop(); // fallback if the session never existed
-    await this.adb.removeForward(this.serial, this.localPort);
-    await this.adb.forceStop(this.serial, this.appId);
+    // Each ADBManager/bridge method below already swallows its own errors
+    // internally (device gone, forward already removed, etc.) — wrapped
+    // again here so that invariant is explicit and enforced at this call
+    // site too, not an invisible property a future refactor could break.
+    const steps = [
+      () => this.bridge.deleteSession(), // kills instrumentation (spike finding #3)
+      () => this.instrumentation.stop(), // fallback if the session never existed
+      () => this.adb.removeForward(this.serial, this.localPort),
+      () => this.adb.forceStop(this.serial, this.appId),
+    ];
+    for (const step of steps) {
+      try {
+        await step();
+      } catch {
+        // best effort — later teardown steps must still run
+      }
+    }
   }
 }

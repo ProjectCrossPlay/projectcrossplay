@@ -23,6 +23,7 @@
   },
   "dependencies": {
     "@projectcrossplay/core": "workspace:*",
+    "@projectcrossplay/trace-viewer": "workspace:*",
     "commander": "^15.0.0",
     "vitest": "^3.2.4"
   },

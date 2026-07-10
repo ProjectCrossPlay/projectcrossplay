@@ -1,0 +1,152 @@
+/* Design tokens per docs/design/design-system.md — dark-first, dense, no CDN fonts. */
+:root {
+  --bg: #0f1115;
+  --bg-raised: #171a21;
+  --text: #e6e8ec;
+  --text-dim: #9ba1ac;
+  --accent: #4e8cff;
+  --pass: #3fb950;
+  --fail: #f85149;
+  --warn: #d29922;
+  --skip: #6e7681;
+  --border: #2a2e37;
+  --row-height: 28px;
+}
+:root[data-theme='light'] {
+  --bg: #ffffff;
+  --bg-raised: #f6f7f9;
+  --text: #1a1d23;
+  --text-dim: #5c6470;
+  --accent: #2563eb;
+  --pass: #1a7f37;
+  --fail: #cf222e;
+  --warn: #9a6700;
+  --skip: #8c959f;
+  --border: #e2e5ea;
+}
+
+* { box-sizing: border-box; }
+html, body, #app { height: 100%; margin: 0; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font: 13px/20px system-ui, -apple-system, sans-serif;
+}
+.mono {
+  font: 12.5px/20px ui-monospace, 'SF Mono', 'JetBrains Mono', Menlo, monospace;
+}
+
+.app { display: flex; flex-direction: column; height: 100%; }
+
+.header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 12px 16px; background: var(--bg-raised); border-bottom: 1px solid var(--border);
+}
+.header-title { display: flex; align-items: center; gap: 8px; font-weight: 600; font-size: 15px; }
+.header-meta { color: var(--text-dim); }
+.header-meta.mono { margin-top: 2px; }
+.badge { padding: 1px 8px; border-radius: 3px; font-size: 12px; font-weight: 600; }
+.badge.pass { background: color-mix(in srgb, var(--pass) 20%, transparent); color: var(--pass); }
+.badge.fail { background: color-mix(in srgb, var(--fail) 20%, transparent); color: var(--fail); }
+.header-actions button { margin-left: 8px; }
+
+button {
+  background: var(--bg-raised); color: var(--text); border: 1px solid var(--border);
+  border-radius: 4px; padding: 4px 10px; font: inherit; cursor: pointer;
+}
+button:hover { border-color: var(--accent); }
+button:focus-visible, [tabindex]:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+
+.body { display: flex; flex: 1; min-height: 0; }
+
+.steps-pane {
+  width: 280px; flex: none; border-right: 1px solid var(--border);
+  display: flex; flex-direction: column; min-height: 0;
+}
+.steps-scroll { flex: 1; overflow-y: auto; position: relative; }
+.step-row {
+  height: var(--row-height); display: flex; align-items: center; gap: 8px;
+  padding: 0 10px; cursor: pointer; white-space: nowrap; overflow: hidden;
+}
+.step-row:hover { background: var(--bg-raised); }
+.step-row.selected { background: color-mix(in srgb, var(--accent) 18%, transparent); }
+.step-row.failed .step-action { color: var(--fail); }
+.step-glyph.pass { color: var(--pass); }
+.step-glyph.fail { color: var(--fail); }
+.step-index { color: var(--text-dim); width: 20px; text-align: right; }
+.step-action { flex: 1; overflow: hidden; text-overflow: ellipsis; }
+.step-duration { color: var(--text-dim); font-size: 11px; }
+.steps-footer { padding: 8px 10px; border-top: 1px solid var(--border); color: var(--text-dim); font-size: 11px; }
+.steps-footer kbd {
+  background: var(--bg-raised); border: 1px solid var(--border); border-radius: 3px;
+  padding: 0 4px; font-family: inherit;
+}
+
+.main-pane { flex: 1; display: flex; flex-direction: column; min-height: 0; }
+.stage {
+  flex: 1; display: flex; align-items: center; justify-content: center;
+  background: var(--bg); overflow: auto; padding: 16px; min-height: 120px;
+}
+.stage img { max-width: 100%; max-height: 100%; border: 1px solid var(--border); border-radius: 4px; }
+.stage-empty { color: var(--text-dim); }
+
+.step-detail {
+  padding: 8px 16px; border-top: 1px solid var(--border); display: flex;
+  align-items: center; gap: 12px; justify-content: space-between;
+}
+
+.error-banner {
+  background: color-mix(in srgb, var(--fail) 12%, var(--bg));
+  border-top: 1px solid var(--fail); border-bottom: 1px solid var(--fail);
+  color: var(--fail); padding: 10px 16px; white-space: pre-wrap;
+}
+
+.tabs { display: flex; border-top: 1px solid var(--border); background: var(--bg-raised); }
+.tab {
+  padding: 8px 14px; cursor: pointer; color: var(--text-dim); border-bottom: 2px solid transparent;
+}
+.tab.active { color: var(--text); border-bottom-color: var(--accent); }
+.tab-content { flex: none; height: 40%; overflow: auto; border-top: 1px solid var(--border); padding: 8px 16px; }
+
+.log-line { display: flex; gap: 8px; }
+.log-line .t { color: var(--text-dim); width: 90px; flex: none; }
+.log-line.ok { color: var(--text); }
+.log-line.fail { color: var(--fail); }
+
+.tree-search {
+  width: 100%; margin-bottom: 8px; padding: 4px 8px; background: var(--bg);
+  border: 1px solid var(--border); color: var(--text); border-radius: 4px; font: inherit;
+}
+.tree-node { margin-left: 14px; }
+.tree-toggle { cursor: pointer; user-select: none; color: var(--text-dim); }
+.tree-tag { color: var(--accent); }
+.tree-attr { color: var(--text-dim); }
+.tree-match { background: color-mix(in srgb, var(--warn) 30%, transparent); }
+
+.meta-row { display: flex; gap: 8px; }
+.meta-row .k { color: var(--text-dim); width: 140px; flex: none; }
+
+.empty-state {
+  margin: auto; text-align: center; max-width: 420px; padding: 24px;
+  border: 1px solid var(--border); border-radius: 8px; background: var(--bg-raised);
+}
+.empty-state h2 { color: var(--fail); margin-top: 0; }
+.empty-state p { color: var(--text-dim); }
+
+.help-overlay {
+  position: fixed; inset: 0; background: color-mix(in srgb, black 60%, transparent);
+  display: flex; align-items: center; justify-content: center;
+}
+.help-card {
+  background: var(--bg-raised); border: 1px solid var(--border); border-radius: 8px;
+  padding: 20px 24px; min-width: 260px;
+}
+.help-card dl { display: grid; grid-template-columns: auto 1fr; gap: 6px 16px; margin: 12px 0 0; }
+.help-card dt { font-family: ui-monospace, monospace; color: var(--accent); }
+
+.dropzone-active::after {
+  content: 'Drop trace file to open'; position: fixed; inset: 0;
+  background: color-mix(in srgb, var(--accent) 20%, var(--bg));
+  color: var(--text); display: flex; align-items: center; justify-content: center;
+  font-size: 20px; pointer-events: none; z-index: 10;
+}

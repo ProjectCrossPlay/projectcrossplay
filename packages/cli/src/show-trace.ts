@@ -1,12 +1,18 @@
 /**
- * crossplay show-trace — terminal summary of a .trace file. The full Preact
- * viewer (ADR-004, wireframes W1–W3) lands in Sprint 3; this keeps traces
- * inspectable from day one and exercises the strict reader (NFR-018).
+ * crossplay show-trace (B-041, ADR-004, wireframes W1–W3): quick terminal
+ * summary (useful headless/CI) plus the local Preact viewer, opened
+ * automatically in a browser when running interactively.
  */
 import { readTrace } from '@projectcrossplay/core';
 import { dim, FAIL, OK, seconds } from './ui.js';
+import { startViewerServer, tryOpenBrowser } from './viewer-server.js';
 
-export async function showTrace(file: string): Promise<number> {
+export interface ShowTraceOptions {
+  /** Start the local viewer server and try to open it. Default: true when interactive. */
+  open?: boolean;
+}
+
+export async function showTrace(file: string, opts: ShowTraceOptions = {}): Promise<number> {
   let trace: Awaited<ReturnType<typeof readTrace>>;
   try {
     trace = await readTrace(file);
@@ -28,6 +34,22 @@ export async function showTrace(file: string): Promise<number> {
     console.log(`  ${symbol} ${String(s.i + 1).padStart(2)} ${label.padEnd(60)} ${seconds(s.t1 - s.t0)}`);
     if (s.error) for (const line of s.error.split('\n')) console.log(`       ${line}`);
   }
-  console.log(dim('\n(full visual viewer ships in v0.1: crossplay show-trace will open it in your browser)'));
+
+  const shouldOpen = opts.open ?? process.stdout.isTTY === true;
+  if (!shouldOpen) {
+    console.log(dim('\n(non-interactive: viewer not started — run without --no-open, or in a terminal, to view visually)'));
+    return 0;
+  }
+
+  const server = await startViewerServer(file);
+  console.log(`\nViewer: ${server.url}`);
+  const opened = await tryOpenBrowser(server.url);
+  console.log(dim(opened ? 'Opened in your browser. Press Ctrl+C to stop.' : 'Open the URL above manually. Press Ctrl+C to stop.'));
+
+  await new Promise<void>((resolve) => {
+    process.on('SIGINT', () => resolve());
+    process.on('SIGTERM', () => resolve());
+  });
+  await server.close();
   return 0;
 }

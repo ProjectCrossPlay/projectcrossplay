@@ -9,3 +9,5 @@ spikes/uia2-bridge/package/
 
 # traces & local outputs
 .crossplay/
+flake-report-*.json
+soak-report-*.json

@@ -10,9 +10,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
-      # Node 24 for the toolchain: pnpm 11 needs node:sqlite (Node >= 22).
-      # Package engines remain >= 20; a dedicated Node-20 compat job is added
-      # with the test suite in Sprint 4 (B-042).
+      # Node 24 for the toolchain: pnpm 11 needs node:sqlite (Node >= 22), and
+      # driver-android's appium-uiautomator2-server dependency needs
+      # ^20.19.0 || ^22.12.0 || >=24.0.0 (see engines.node, all packages).
       - uses: actions/setup-node@v4
         with:
           node-version: 24
@@ -25,8 +25,93 @@ jobs:
       # Supply-chain gate (NFR-015): fail on high/critical advisories
       - run: pnpm audit --audit-level high
 
-  # Sprint 4 (B-042) extends this file with:
-  # - web demo matrix: browser [chromium, firefox, webkit]  (FR-012)
-  # - android emulator job via reactivecircus/android-emulator-runner (FR-080)
-  # - trace artifact upload on failure (FR-081)
-  # - nightly 50-run flake job + soak/leak job (NFR-001/013/014)
+  # B-042: 3-browser matrix (FR-012) — runs the shared demo spec on every push/PR.
+  web-demo:
+    name: web demo (${{ matrix.browser }})
+    needs: build-test
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        browser: [chromium, firefox, webkit]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build
+      # Install via driver-web's own pinned playwright, not a bare `npx
+      # playwright` (which would resolve an unrelated, unpinned version).
+      - run: pnpm --filter @projectcrossplay/driver-web exec playwright install --with-deps ${{ matrix.browser }}
+      - name: Start demo server
+        working-directory: examples/demo-web
+        run: nohup node server.mjs > server.log 2>&1 &
+      - name: Wait for demo server
+        run: for i in $(seq 1 20); do curl -sf http://127.0.0.1:4173/ >/dev/null && exit 0; sleep 0.5; done; echo "server never came up"; exit 1
+      - name: Run demo spec
+        working-directory: examples/demo-web
+        run: pnpm exec crossplay test --target ${{ matrix.browser }}
+      # FR-081: traces uploaded on failure
+      - name: Upload traces
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: traces-web-${{ matrix.browser }}
+          path: examples/demo-web/.crossplay/traces
+
+  # B-042: Android emulator job (FR-080) — API 30 per NFR-006, matches the demo AVD.
+  android-demo:
+    name: android demo (API 30)
+    needs: build-test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build
+      # GH-hosted ubuntu runners ship the Android SDK + build-tools preinstalled
+      # (ANDROID_HOME preset) — building the APK needs no emulator, so this
+      # runs before the emulator step below.
+      - name: Build Kotlin demo APK
+        working-directory: examples/demo-android-kotlin
+        run: ./gradlew assembleDebug -q --console=plain
+      # Without this, /dev/kvm is root-only on GH-hosted runners and the
+      # emulator silently falls back to software rendering — boots in
+      # minutes instead of seconds and is too sluggish for the 30s
+      # element-wait budget (observed: 331s boot, login test timeout).
+      - name: Enable KVM group perms
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+      - name: Run demo spec on emulator
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 30
+          arch: x86_64
+          profile: pixel_5
+          disable-animations: true
+          # android-emulator-runner runs each script line as its own shell
+          # invocation, so a `cd` on its own line doesn't carry over — chain
+          # with && on one line instead.
+          script: cd examples/demo-web && pnpm exec crossplay test --target android-kotlin
+      - name: Upload traces
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: traces-android
+          path: examples/demo-web/.crossplay/traces
+
+  # Flake farm (B-035) + soak/leak test (B-043) run nightly, not per-push —
+  # see .github/workflows/nightly.yml.

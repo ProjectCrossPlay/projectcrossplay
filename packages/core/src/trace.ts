@@ -17,37 +17,16 @@ import { join } from 'node:path';
 import type { UnifiedSelector } from './driver.js';
 import type { WaitLogEntry } from './errors.js';
 import { formatSelector } from './selector.js';
+import {
+  parseTraceEntries,
+  TRACE_FORMAT_VERSION,
+  type ParsedTrace,
+  type TraceManifest,
+  type TraceStep,
+} from './trace-format.js';
 import { packZip, type ZipEntry } from './zip.js';
-
-export const TRACE_FORMAT_VERSION = 1;
-
-export interface TraceManifest {
-  formatVersion: number;
-  /** `demo.spec.ts › list/detail` */
-  spec: string;
-  target: string;
-  platform: string;
-  result: 'passed' | 'failed';
-  startedAt: string;
-  durationMs: number;
-}
-
-export interface TraceStep {
-  i: number;
-  action: string;
-  selector?: string;
-  /** For fill steps: the loggable value — '•••••••' unless masking was opted out. */
-  value?: string;
-  masked?: boolean;
-  status: 'passed' | 'failed';
-  /** ms since run start */
-  t0: number;
-  t1: number;
-  screenshot?: string;
-  hierarchy?: string;
-  waitLog?: WaitLogEntry[];
-  error?: string;
-}
+export type { ZipEntry } from './zip.js';
+export { parseTraceEntries, TRACE_FORMAT_VERSION, type ParsedTrace, type TraceManifest, type TraceStep };
 
 export interface StepInput {
   action: string;
@@ -171,32 +150,8 @@ export class TraceWriter {
   }
 }
 
-/** Parsed trace, as consumed by the CLI summary and (Sprint 3) the viewer. */
-export interface ParsedTrace {
-  manifest: TraceManifest;
-  steps: TraceStep[];
-  /** Binary/text assets by entry name (screenshots/N.png, hierarchy/N.xml). */
-  assets: Map<string, Uint8Array>;
-}
-
 /** Strict reader — throws on anything malformed (NFR-018: traces are untrusted). */
 export async function readTrace(path: string): Promise<ParsedTrace> {
   const { unpackZip } = await import('./zip.js');
-  const entries = unpackZip(await readFile(path));
-  const byName = new Map(entries.map((e) => [e.name, e.data]));
-  const manifestRaw = byName.get('manifest.json');
-  const stepsRaw = byName.get('steps.jsonl');
-  if (!manifestRaw || !stepsRaw) throw new Error('not a CrossPlay trace: missing manifest.json or steps.jsonl');
-  const manifest = JSON.parse(new TextDecoder().decode(manifestRaw)) as TraceManifest;
-  if (manifest.formatVersion !== TRACE_FORMAT_VERSION) {
-    throw new Error(`unsupported trace formatVersion ${manifest.formatVersion} (v${TRACE_FORMAT_VERSION} only)`);
-  }
-  const steps = new TextDecoder()
-    .decode(stepsRaw)
-    .split('\n')
-    .filter((l) => l.trim() !== '')
-    .map((l) => JSON.parse(l) as TraceStep);
-  byName.delete('manifest.json');
-  byName.delete('steps.jsonl');
-  return { manifest, steps, assets: byName };
+  return parseTraceEntries(unpackZip(await readFile(path)));
 }

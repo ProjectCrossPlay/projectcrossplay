@@ -78,6 +78,16 @@ export const driver: PlatformDriver = {
 
 export default driver;
 
+/**
+ * Cap on tracked element handles (NFR-013/014). Auto-wait re-queries
+ * findElements() every poll by design (drivers never cache across polls),
+ * so a long-running spec would otherwise grow this map without bound — well
+ * past any single action's poll count (a 30s wait at the 50-200ms adaptive
+ * backoff is under ~200 polls), so evicting past this cap never touches a
+ * handle still in use by an in-flight action.
+ */
+const MAX_TRACKED_HANDLES = 500;
+
 class WebSession implements DriverSession {
   readonly page: Page;
   private handles = new Map<string, PWElementHandle>();
@@ -103,11 +113,24 @@ class WebSession implements DriverSession {
   async findElements(selector: UnifiedSelector): Promise<ElementHandle[]> {
     const locator = this.toLocator(selector);
     const pwHandles = await locator.elementHandles();
-    return pwHandles.map((h) => {
+    const result = pwHandles.map((h) => {
       const id = `${this.engineName}-el-${this.nextId++}`;
       this.handles.set(id, h);
       return { id };
     });
+    await this.evictOldHandles();
+    return result;
+  }
+
+  /** FIFO eviction past the cap — releases the remote JS handle too, not just our own reference. */
+  private async evictOldHandles(): Promise<void> {
+    while (this.handles.size > MAX_TRACKED_HANDLES) {
+      const oldestId = this.handles.keys().next().value;
+      if (oldestId === undefined) break;
+      const h = this.handles.get(oldestId);
+      this.handles.delete(oldestId);
+      if (h) await h.dispose().catch(() => {});
+    }
   }
 
   async getElementState(el: ElementHandle): Promise<ElementState> {
@@ -158,8 +181,19 @@ class WebSession implements DriverSession {
     if (this.disposed) return;
     this.disposed = true;
     this.handles.clear();
-    await this.context.close();
-    await this.browser.close();
+    // Independent try/catch per step: context.close() rejecting (e.g. the
+    // browser process already crashed) must not skip browser.close() —
+    // that would orphan the whole browser process (NFR-014).
+    try {
+      await this.context.close();
+    } catch {
+      // already closed/crashed — browser.close() below still needs to run
+    }
+    try {
+      await this.browser.close();
+    } catch {
+      // already closed/crashed
+    }
   }
 
   private handle(el: ElementHandle): PWElementHandle {
