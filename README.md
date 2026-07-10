@@ -52,7 +52,7 @@ pnpm install
 pnpm build && pnpm typecheck && pnpm test
 ```
 
-Node ≥ 20. See [CONTRIBUTING.md](CONTRIBUTING.md). Security policy: [SECURITY.md](SECURITY.md).
+Node 20.19+, 22.12+, or 24+ (matches the appium-uiautomator2-server dependency's range). The `examples/demo-android-rn` app is a standalone React Native project with its own, stricter requirement (Node ≥ 22.11) inherited from the RN template — it isn't part of the pnpm workspace and doesn't affect the range above. See [CONTRIBUTING.md](CONTRIBUTING.md). Security policy: [SECURITY.md](SECURITY.md).
 
 ## License
 

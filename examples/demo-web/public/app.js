@@ -18,13 +18,13 @@ const app = document.getElementById('app');
 function loginScreen(message) {
   app.innerHTML = `
     <h1>Demo Shop</h1>
-    <p data-testid="login-hint">Sign in with demo / crossplay</p>
+    <p data-testid="login_hint">Sign in with demo / crossplay</p>
     <input data-testid="username" placeholder="Username" autocomplete="username" />
     <input data-testid="password" placeholder="Password" type="password" autocomplete="current-password" />
-    <button data-testid="login-button">Sign in</button>
-    <p class="error ${message ? '' : 'hidden'}" data-testid="login-error">${message ?? ''}</p>
+    <button data-testid="login_button">Sign in</button>
+    <p class="error ${message ? '' : 'hidden'}" data-testid="login_error">${message ?? ''}</p>
   `;
-  document.querySelector('[data-testid="login-button"]').addEventListener('click', () => {
+  document.querySelector('[data-testid="login_button"]').addEventListener('click', () => {
     const user = document.querySelector('[data-testid="username"]').value;
     const pass = document.querySelector('[data-testid="password"]').value;
     app.innerHTML = `<p id="spinner" data-testid="spinner">Signing in…</p>`;
@@ -39,31 +39,31 @@ function listScreen() {
   app.innerHTML = `
     <h1>Inventory</h1>
     <p data-testid="greeting">Welcome back, demo</p>
-    <ul data-testid="item-list"></ul>
-    <button data-testid="logout-button">Log out</button>
+    <ul data-testid="item_list"></ul>
+    <button data-testid="logout_button">Log out</button>
   `;
-  const ul = document.querySelector('[data-testid="item-list"]');
+  const ul = document.querySelector('[data-testid="item_list"]');
   // Items appear one by one — exercises present/stable waiting on the last row.
   ITEMS.forEach((item, idx) => {
     setTimeout(() => {
       const li = document.createElement('li');
-      li.dataset.testid = `item-row-${item.id}`;
+      li.dataset.testid = `item_row_${item.id}`;
       li.textContent = `${item.name} — ${item.price}`;
       li.addEventListener('click', () => detailScreen(item));
       ul.appendChild(li);
     }, 80 * (idx + 1));
   });
-  document.querySelector('[data-testid="logout-button"]').addEventListener('click', () => loginScreen());
+  document.querySelector('[data-testid="logout_button"]').addEventListener('click', () => loginScreen());
 }
 
 function detailScreen(item) {
   app.innerHTML = `
-    <h1 data-testid="detail-title">${item.name}</h1>
-    <p data-testid="detail-price">${item.price}</p>
-    <p data-testid="detail-blurb">${item.blurb}</p>
-    <button data-testid="back-button">Back to list</button>
+    <h1 data-testid="detail_title">${item.name}</h1>
+    <p data-testid="detail_price">${item.price}</p>
+    <p data-testid="detail_blurb">${item.blurb}</p>
+    <button data-testid="back_button">Back to list</button>
   `;
-  document.querySelector('[data-testid="back-button"]').addEventListener('click', listScreen);
+  document.querySelector('[data-testid="back_button"]').addEventListener('click', listScreen);
 }
 
 loginScreen();

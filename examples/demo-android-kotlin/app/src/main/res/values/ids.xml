@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Stable resource-ids for the unified testId selector (spec §3.4).
+     Names mirror examples/demo-web's data-testid values exactly. -->
+<resources>
+    <item name="username" type="id" />
+    <item name="password" type="id" />
+    <item name="login_button" type="id" />
+    <item name="login_error" type="id" />
+    <item name="login_hint" type="id" />
+    <item name="spinner" type="id" />
+    <item name="greeting" type="id" />
+    <item name="item_list" type="id" />
+    <item name="item_row_1" type="id" />
+    <item name="item_row_2" type="id" />
+    <item name="item_row_3" type="id" />
+    <item name="item_row_4" type="id" />
+    <item name="item_row_5" type="id" />
+    <item name="logout_button" type="id" />
+    <item name="detail_title" type="id" />
+    <item name="detail_price" type="id" />
+    <item name="detail_blurb" type="id" />
+    <item name="back_button" type="id" />
+</resources>

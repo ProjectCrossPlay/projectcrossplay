@@ -1,0 +1,43 @@
+# OSX
+.DS_Store
+
+# Xcode
+ios/build/
+*.pbxuser
+!default.pbxuser
+*.xcuserstate
+ios/.xcode.env.local
+
+# Android/IntelliJ
+android/build/
+android/.gradle/
+android/app/build/
+android/local.properties
+*.iml
+.idea
+.kotlin/
+
+# node.js
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# fastlane
+**/fastlane/report.xml
+**/fastlane/Preview.html
+**/fastlane/screenshots
+**/fastlane/test_output
+
+# Bundle artifacts
+*.jsbundle
+
+# Ruby / CocoaPods
+ios/Pods/
+/vendor/bundle/
+
+# Temporary files created by Metro
+.metro-health-check*
+
+# testing
+/coverage
+android/app/.cxx/

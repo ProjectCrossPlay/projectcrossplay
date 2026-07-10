@@ -2,6 +2,8 @@ packages:
   - packages/*
   - spikes/*
   - examples/*
+  # RN app manages its own npm node_modules (RN's gradle plugin expects that layout)
+  - '!examples/demo-android-rn'
 allowBuilds:
   esbuild: true
 overrides:
