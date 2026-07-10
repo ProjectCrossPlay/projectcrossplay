@@ -1,0 +1,13 @@
+{
+  "$schema": "https://typedoc.org/schema.json",
+  "entryPoints": ["packages/core/src/index.ts", "packages/core/src/test.ts"],
+  "out": "docs/api",
+  "plugin": ["typedoc-plugin-markdown"],
+  "tsconfig": "packages/core/tsconfig.json",
+  "readme": "none",
+  "name": "CrossPlay API reference",
+  "excludeInternal": true,
+  "excludePrivate": true,
+  "hideGenerator": true,
+  "disableSources": true
+}

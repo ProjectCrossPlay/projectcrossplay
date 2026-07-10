@@ -45,6 +45,14 @@ crossplay test --target=all   # same spec: Chromium + Firefox + WebKit + Android
 
 The `spikes/` directory holds the validation spikes behind the architecture decisions — including live-measured UIAutomator2 session startup of **1.57s** ([results](spikes/uia2-bridge/RESULTS.md)).
 
+## Docs
+
+- [Quickstart](docs/quickstart.md) — a passing test in under 15 minutes
+- [Selectors](docs/selectors.md) — `by.testId`/`by.text`/`by.role`, and what each maps to per platform
+- [Architecture](docs/architecture.md) — how the pieces fit together
+- [Writing a driver](docs/driver-plugin.md) — implement `PlatformDriver` for another platform
+- [API reference](docs/api-reference.md) — generated from types
+
 ## Development
 
 ```bash

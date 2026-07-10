@@ -9,9 +9,12 @@
     "build": "pnpm -r build && rm -rf examples/demo-web/node_modules && pnpm install --frozen-lockfile",
     "typecheck": "pnpm -r typecheck",
     "test": "pnpm -r test",
-    "lint": "pnpm -r lint"
+    "lint": "pnpm -r lint",
+    "docs:api": "typedoc"
   },
   "devDependencies": {
+    "typedoc": "^0.28.20",
+    "typedoc-plugin-markdown": "^4.12.0",
     "typescript": "^5.5.4"
   }
 }

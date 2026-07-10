@@ -24,6 +24,10 @@ jobs:
       - run: pnpm test
       # Supply-chain gate (NFR-015): fail on high/critical advisories
       - run: pnpm audit --audit-level high
+      # docs/api is generated from types (B-050/FR-090) and committed, not
+      # built at publish time — this catches a public type changing without
+      # regenerating it (fix: pnpm docs:api).
+      - run: pnpm docs:api && git diff --exit-code -- docs/api
 
   # B-042: 3-browser matrix (FR-012) — runs the shared demo spec on every push/PR.
   web-demo:
