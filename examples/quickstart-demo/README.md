@@ -36,7 +36,7 @@ The application will start immediately at:
 Open a new terminal window, navigate back to this directory, and run the automated tests:
 
 ```bash
-npm run test
+npm run test:e2e
 ```
 
 Under the hood, CrossPlay will:

@@ -6,7 +6,8 @@
   "type": "module",
   "scripts": {
     "start-app": "node server.mjs",
-    "test": "crossplay test --target web",
+    "test": "echo 'To run tests, run: npm run test:e2e (requires playwright browsers installed)'",
+    "test:e2e": "crossplay test --target web",
     "test:all": "crossplay test --target web,android"
   },
   "devDependencies": {
