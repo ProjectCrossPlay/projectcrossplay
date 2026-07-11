@@ -8,6 +8,9 @@ const __dirname = path.dirname(__filename);
 
 const PORT = 3000;
 const PUBLIC_DIR = path.join(__dirname, 'public');
+// Trailing separator so a sibling dir sharing the prefix (e.g. "public-evil")
+// can't pass the startsWith check below.
+const PUBLIC_ROOT = PUBLIC_DIR.endsWith(path.sep) ? PUBLIC_DIR : PUBLIC_DIR + path.sep;
 
 const MIME_TYPES = {
   '.html': 'text/html',
@@ -22,7 +25,7 @@ const server = http.createServer((req, res) => {
   const filePath = path.join(PUBLIC_DIR, safeSuffix === '/' ? 'index.html' : safeSuffix);
 
   // Ensure filePath starts with PUBLIC_DIR
-  if (!filePath.startsWith(PUBLIC_DIR)) {
+  if (!filePath.startsWith(PUBLIC_ROOT)) {
     res.statusCode = 403;
     res.end('Forbidden');
     return;
