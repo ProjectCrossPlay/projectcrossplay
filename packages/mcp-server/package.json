@@ -1,13 +1,13 @@
 {
-  "name": "@projectcrossplay/cli",
-  "version": "0.1.1",
-  "description": "CrossPlay CLI: init, doctor, test, show-trace",
+  "name": "@projectcrossplay/mcp-server",
+  "version": "0.1.0",
+  "description": "CrossPlay MCP server: expose doctor/test/read-trace/scaffold to AI coding agents over the Model Context Protocol",
   "license": "Apache-2.0",
-  "keywords": ["testing", "e2e", "automation", "cli", "cross-platform", "crossplay"],
+  "keywords": ["testing", "e2e", "automation", "mcp", "model-context-protocol", "ai-agent", "cross-platform", "crossplay"],
   "repository": {
     "type": "git",
     "url": "https://github.com/ProjectCrossPlay/projectcrossplay.git",
-    "directory": "packages/cli"
+    "directory": "packages/mcp-server"
   },
   "homepage": "https://github.com/ProjectCrossPlay/projectcrossplay#readme",
   "bugs": {
@@ -17,17 +17,7 @@
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "bin": {
-    "crossplay": "./dist/index.js"
-  },
-  "exports": {
-    ".": {
-      "types": "./dist/index.d.ts",
-      "default": "./dist/index.js"
-    },
-    "./doctor": {
-      "types": "./dist/doctor.d.ts",
-      "default": "./dist/doctor.js"
-    }
+    "crossplay-mcp": "./dist/index.js"
   },
   "files": [
     "dist"
@@ -38,18 +28,21 @@
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "typecheck": "tsc -p tsconfig.json --noEmit",
-    "test": "echo 'CLI smoke-tested via examples/demo-web (unit tests in Sprint 2 QA pass)'",
-    "lint": "eslint src"
+    "test": "vitest run",
+    "lint": "eslint src tests"
   },
   "dependencies": {
     "@projectcrossplay/core": "workspace:*",
-    "@projectcrossplay/trace-viewer": "workspace:*",
-    "commander": "^15.0.0",
+    "@projectcrossplay/cli": "workspace:*",
+    "@modelcontextprotocol/sdk": "^1.29.0",
+    "zod": "^3.25.0"
+  },
+  "peerDependencies": {
     "vitest": "^3.2.4"
   },
   "devDependencies": {
     "@types/node": "^20.19.43",
-    "playwright": "~1.61.1",
-    "typescript": "^5.5.4"
+    "typescript": "^5.5.4",
+    "vitest": "^3.2.4"
   }
 }

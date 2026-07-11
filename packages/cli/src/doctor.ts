@@ -12,16 +12,27 @@ import { FAIL, OK, WARN } from './ui.js';
 
 const exec = promisify(execFile);
 
-type Status = 'ok' | 'warn' | 'fail';
+export type Status = 'ok' | 'warn' | 'fail';
 
-interface Check {
+export interface Check {
   name: string;
   status: Status;
   detail: string;
   fixes: string[];
 }
 
-export async function doctor(opts: { json?: boolean }): Promise<number> {
+export interface DoctorResult {
+  checks: Check[];
+  blocking: number;
+  optional: number;
+}
+
+/**
+ * Pure check computation, no console output — split out from `doctor()` so
+ * callers that need the structured data (the MCP `crossplay_doctor` tool,
+ * B-105-03) can get it directly instead of scraping the CLI's own stdout.
+ */
+export async function runDoctorChecks(): Promise<DoctorResult> {
   const checks: Check[] = [];
 
   // Node.js
@@ -135,6 +146,12 @@ export async function doctor(opts: { json?: boolean }): Promise<number> {
 
   const blocking = checks.filter((c) => c.status === 'fail').length;
   const optional = checks.filter((c) => c.status === 'warn').length;
+
+  return { checks, blocking, optional };
+}
+
+export async function doctor(opts: { json?: boolean }): Promise<number> {
+  const { checks, blocking, optional } = await runDoctorChecks();
 
   if (opts.json) {
     console.log(JSON.stringify({ checks, blocking, optional }, null, 2));
