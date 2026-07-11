@@ -21,7 +21,10 @@ const CONTENT_TYPES: Record<string, string> = {
   '.css': 'text/css; charset=utf-8',
 };
 
-const CSP = "default-src 'self'; img-src 'self' blob:; script-src 'self'; style-src 'self'; connect-src 'self'";
+// frame-ancestors 'none': the port+token already make this hard to guess,
+// but costs nothing to also refuse being framed by a page that somehow did.
+const CSP =
+  "default-src 'self'; img-src 'self' blob:; script-src 'self'; style-src 'self'; connect-src 'self'; frame-ancestors 'none'";
 
 export interface ViewerServer {
   url: string;
@@ -64,6 +67,7 @@ export async function startViewerServer(tracePath: string): Promise<ViewerServer
     const rel = url.slice(prefix.length) || '/';
     res.setHeader('content-security-policy', CSP);
     res.setHeader('x-content-type-options', 'nosniff');
+    res.setHeader('x-frame-options', 'DENY'); // legacy fallback for frame-ancestors
 
     if (rel === '/trace.data') {
       res.setHeader('content-type', 'application/octet-stream');

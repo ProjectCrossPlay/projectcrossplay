@@ -4,6 +4,12 @@ on:
     branches: [main]
   pull_request:
 
+# Least-privilege default (B-052/NFR-015): no job here needs to write
+# anything (checkout/build/test/artifact-upload only) — artifact upload uses
+# its own storage API, not repo write access.
+permissions:
+  contents: read
+
 jobs:
   build-test:
     runs-on: ubuntu-latest

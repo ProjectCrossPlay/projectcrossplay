@@ -4,6 +4,10 @@ on:
     - cron: '0 3 * * *'
   workflow_dispatch: {}
 
+# Least-privilege default (B-052/NFR-015) — see ci.yml for rationale.
+permissions:
+  contents: read
+
 jobs:
   # B-035/NFR-001 pre-release gate: 0 failures in 50 consecutive runs.
   flake-farm-web:
