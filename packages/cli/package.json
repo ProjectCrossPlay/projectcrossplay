@@ -27,6 +27,14 @@
     "./doctor": {
       "types": "./dist/doctor.d.ts",
       "default": "./dist/doctor.js"
+    },
+    "./test-cmd": {
+      "types": "./dist/test-cmd.d.ts",
+      "default": "./dist/test-cmd.js"
+    },
+    "./init": {
+      "types": "./dist/init.d.ts",
+      "default": "./dist/init.js"
     }
   },
   "files": [

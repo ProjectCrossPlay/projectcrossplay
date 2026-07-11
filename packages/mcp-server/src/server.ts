@@ -11,6 +11,9 @@
 import { createRequire } from 'node:module';
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { registerDoctorTool } from './tools/doctor.js';
+import { registerReadTraceTool } from './tools/read-trace.js';
+import { registerScaffoldTool } from './tools/scaffold.js';
+import { registerTestTool } from './tools/test.js';
 
 const { version } = createRequire(import.meta.url)('../package.json') as { version: string };
 
@@ -25,5 +28,8 @@ export const DISCLAIMER = [
 export function createServer(): McpServer {
   const server = new McpServer({ name: 'crossplay-mcp', version });
   registerDoctorTool(server);
+  registerTestTool(server);
+  registerReadTraceTool(server);
+  registerScaffoldTool(server);
   return server;
 }

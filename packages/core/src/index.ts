@@ -38,6 +38,11 @@ export {
 export { DisposeScope } from './dispose.js';
 export { loadDriver } from './registry.js';
 export { waitFor as waitForElement, type WaitOptions, type WaitResult } from './wait.js';
+// Store-only zip pack/unpack (ADR-003) — exposed so tooling (the MCP server's
+// tests, B-105-06) can build real trace fixtures without a private import
+// into another package's compiled output. Symmetric with readTrace: unpack
+// already treats any input as untrusted regardless of who packed it.
+export { packZip, unpackZip, type ZipEntry } from './zip.js';
 
 // The G5 driver contract
 export type {

@@ -53,8 +53,19 @@ jobs:
         with: { name: traces, path: .crossplay/traces }
 `;
 
-export async function init(opts: { ci?: boolean }): Promise<number> {
-  console.log('');
+export interface ScaffoldResult {
+  path: string;
+  action: 'created' | 'skipped';
+  reason?: 'ci-not-requested' | 'exists';
+}
+
+/**
+ * Pure file-scaffolding, no console output — split out from `init()` so
+ * the MCP `crossplay_scaffold` tool (B-105-07) can get structured results
+ * directly. `init()`'s own console.log calls stay CLI-only: stdout is the
+ * MCP transport channel, so the tool must never call `init()` itself.
+ */
+export async function scaffoldFiles(opts: { ci?: boolean }): Promise<ScaffoldResult[]> {
   const files: Array<[string, string, boolean]> = [
     // .mts, not .ts: Node's ESM loader treats a bare .ts file as CommonJS
     // unless the nearest package.json sets "type": "module" — exactly what
@@ -65,18 +76,34 @@ export async function init(opts: { ci?: boolean }): Promise<number> {
     [join('tests', 'example.spec.ts'), SPEC_TEMPLATE, true],
     [join('.github', 'workflows', 'crossplay.yml'), CI_TEMPLATE, opts.ci === true],
   ];
+  const results: ScaffoldResult[] = [];
   for (const [rel, content, enabled] of files) {
     if (!enabled) {
-      console.log(`  ${SKIP} ${rel.padEnd(28)} skipped (--ci to include)`);
+      results.push({ path: rel, action: 'skipped', reason: 'ci-not-requested' });
       continue;
     }
     if (existsSync(rel)) {
-      console.log(`  ${SKIP} ${rel} exists — skipped`);
+      results.push({ path: rel, action: 'skipped', reason: 'exists' });
       continue;
     }
     await mkdir(dirname(rel) === '.' ? '.' : dirname(rel), { recursive: true });
     await writeFile(rel, content, 'utf8');
-    console.log(`  ${OK} ${rel.padEnd(28)} created`);
+    results.push({ path: rel, action: 'created' });
+  }
+  return results;
+}
+
+export async function init(opts: { ci?: boolean }): Promise<number> {
+  console.log('');
+  const results = await scaffoldFiles(opts);
+  for (const r of results) {
+    if (r.action === 'created') {
+      console.log(`  ${OK} ${r.path.padEnd(28)} created`);
+    } else if (r.reason === 'exists') {
+      console.log(`  ${SKIP} ${r.path} exists — skipped`);
+    } else {
+      console.log(`  ${SKIP} ${r.path.padEnd(28)} skipped (--ci to include)`);
+    }
   }
   console.log('\nDone. Next steps:');
   console.log('  1. crossplay doctor          check your environment');

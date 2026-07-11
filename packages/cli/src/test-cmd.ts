@@ -13,39 +13,42 @@ import { readdir, stat } from 'node:fs/promises';
 import { createRequire } from 'node:module';
 import { join, resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
-import type { Vitest } from 'vitest/node';
+import type { Reporter, Vitest } from 'vitest/node';
 import { dim, FAIL, OK, seconds } from './ui.js';
 
-interface TargetResult {
+export interface TestDetail {
+  name: string;
+  fullName: string;
+  state: 'passed' | 'failed' | 'skipped' | 'pending';
+  errors?: Array<{ message: string; stack?: string }>;
+}
+
+export interface TargetResult {
   target: string;
   passed: number;
   failed: number;
   durationMs: number;
+  tests: TestDetail[];
 }
 
+/** A genuine no-op — every Reporter member is optional, so `{}` reports nothing. */
+const SILENT_REPORTER: Reporter = {};
+
 export async function testCmd(opts: { target?: string; config?: string; json?: boolean }): Promise<number> {
-  const requested = opts.target ?? '';
-  let targets: string[];
-  if (requested === '' || requested === 'all') {
-    const names = await readTargetNames(opts.config);
-    if (names === null) {
-      console.error(
-        [
-          `${FAIL} cannot read target names from crossplay.config.ts on Node ${process.versions.node}`,
-          '  importing TypeScript config files outside the test runner needs Node >= 23',
-          '  → pass targets explicitly: crossplay test --target <name>[,<name>…]',
-        ].join('\n'),
-      );
-      return 1;
-    }
-    if (names.length === 0) {
-      console.error(`${FAIL} no targets configured — add one to crossplay.config.ts`);
-      return 1;
-    }
-    targets = requested === 'all' ? names : [names[0]!];
-  } else {
-    targets = requested.split(',').map((t) => t.trim()).filter(Boolean);
+  const resolved = await resolveTargets(opts.target ?? '', opts.config);
+  if (!resolved.ok) {
+    console.error(
+      resolved.reason === 'unreadable-config'
+        ? [
+            `${FAIL} cannot read target names from crossplay.config.ts on Node ${process.versions.node}`,
+            '  importing TypeScript config files outside the test runner needs Node >= 23',
+            '  → pass targets explicitly: crossplay test --target <name>[,<name>…]',
+          ].join('\n')
+        : `${FAIL} no targets configured — add one to crossplay.config.ts`,
+    );
+    return 1;
   }
+  const targets = resolved.targets;
 
   const startedAt = Date.now();
   const results: TargetResult[] = [];
@@ -67,8 +70,20 @@ export async function testCmd(opts: { target?: string; config?: string; json?: b
   return totalFailed;
 }
 
-async function runTarget(target: string, opts: { config?: string }): Promise<TargetResult> {
-  console.log(`\n─── target: ${target} ${'─'.repeat(Math.max(0, 50 - target.length))}\n`);
+/**
+ * Exported so callers other than the CLI (the MCP `crossplay_test` tool,
+ * B-105-05) can get structured per-test results directly instead of
+ * scraping stdout. `quiet`/`specPath` exist for that caller: quiet mode is
+ * mandatory there, not cosmetic — stdout is the actual MCP JSON-RPC
+ * transport channel, and both this function's own console.log line and
+ * Vitest's default reporter write to stdout, which would corrupt the
+ * protocol stream if left on.
+ */
+export async function runTarget(
+  target: string,
+  opts: { config?: string; specPath?: string; quiet?: boolean },
+): Promise<TargetResult> {
+  if (!opts.quiet) console.log(`\n─── target: ${target} ${'─'.repeat(Math.max(0, 50 - target.length))}\n`);
   process.env['CROSSPLAY_TARGET'] = target;
   if (opts.config) process.env['CROSSPLAY_CONFIG'] = opts.config;
 
@@ -77,30 +92,58 @@ async function runTarget(target: string, opts: { config?: string }): Promise<Tar
 
   const { startVitest } = await import('vitest/node');
   const t0 = Date.now();
-  const vitest: Vitest = await startVitest('test', [], {
+  const vitest: Vitest = await startVitest('test', opts.specPath ? [opts.specPath] : [], {
     watch: false,
     globalSetup: [globalSetup],
     // A test spans several auto-waited actions (30s budget each, FR-042) plus
     // session launch; Vitest's 5s default would cut real runs short.
     testTimeout: 120_000,
     hookTimeout: 60_000,
+    ...(opts.quiet ? { reporters: [SILENT_REPORTER], silent: true as const } : {}),
   });
   await vitest.close();
 
   let passed = 0;
   let failed = 0;
+  const tests: TestDetail[] = [];
   for (const mod of vitest.state.getTestModules()) {
     for (const t of mod.children.allTests()) {
-      const state = t.result().state;
-      if (state === 'passed') passed++;
-      else if (state === 'failed') failed++;
+      const result = t.result();
+      if (result.state === 'passed') passed++;
+      else if (result.state === 'failed') failed++;
+      tests.push({
+        name: t.name,
+        fullName: t.fullName,
+        state: result.state,
+        ...(result.state === 'failed'
+          ? { errors: result.errors.map((e) => ({ message: e.message, ...(e.stack ? { stack: e.stack } : {}) })) }
+          : {}),
+      });
     }
   }
-  return { target, passed, failed, durationMs: Date.now() - t0 };
+  return { target, passed, failed, durationMs: Date.now() - t0, tests };
+}
+
+export type ResolvedTargets = { ok: true; targets: string[] } | { ok: false; reason: 'unreadable-config' | 'no-targets-configured' };
+
+/**
+ * Shared target-name resolution ('' / 'all' / comma-list) — used by both
+ * the CLI's `testCmd` and the MCP `crossplay_test` tool (B-105-05), which
+ * need identical behavior but render the failure cases differently
+ * (stderr text vs. a structured tool error).
+ */
+export async function resolveTargets(requested: string, configPath?: string): Promise<ResolvedTargets> {
+  if (requested === '' || requested === 'all') {
+    const names = await readTargetNames(configPath);
+    if (names === null) return { ok: false, reason: 'unreadable-config' };
+    if (names.length === 0) return { ok: false, reason: 'no-targets-configured' };
+    return { ok: true, targets: requested === 'all' ? names : [names[0]!] };
+  }
+  return { ok: true, targets: requested.split(',').map((t) => t.trim()).filter(Boolean) };
 }
 
 /** Try to read target names by importing the config from this process. */
-async function readTargetNames(configPath?: string): Promise<string[] | null> {
+export async function readTargetNames(configPath?: string): Promise<string[] | null> {
   const candidates = configPath
     ? [resolve(configPath)]
     : ['crossplay.config.js', 'crossplay.config.mjs', 'crossplay.config.ts', 'crossplay.config.mts'].map((c) => resolve(c));

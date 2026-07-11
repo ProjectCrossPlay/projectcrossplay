@@ -1,16 +1,6 @@
 import { describe, expect, test } from 'vitest';
-import { Client } from '@modelcontextprotocol/sdk/client/index.js';
-import { InMemoryTransport } from '@modelcontextprotocol/sdk/inMemory.js';
-import { createServer, DISCLAIMER } from '../src/server.js';
-
-/** Connects a fresh server+client pair over a real in-memory transport (no mocks). */
-async function connected(): Promise<{ client: Client; close: () => Promise<void> }> {
-  const [clientTransport, serverTransport] = InMemoryTransport.createLinkedPair();
-  const server = createServer();
-  const client = new Client({ name: 'test-client', version: '0.0.0' });
-  await Promise.all([server.server.connect(serverTransport), client.connect(clientTransport)]);
-  return { client, close: async () => Promise.all([client.close(), server.server.close()]).then(() => undefined) };
-}
+import { DISCLAIMER } from '../src/server.js';
+import { connected } from './helpers.js';
 
 describe('protocol bootstrap (B-105-02)', () => {
   test('a real MCP client completes the initialize handshake', async () => {
@@ -24,14 +14,24 @@ describe('protocol bootstrap (B-105-02)', () => {
     expect(DISCLAIMER).toMatch(/crossplay_test/);
     expect(DISCLAIMER).toMatch(/execute real code/i);
   });
+
+  test('lists exactly the 4 tools shipped so far, none silently dropped or duplicated', async () => {
+    const { client, close } = await connected();
+    const { tools } = await client.listTools();
+    expect(tools.map((t) => t.name).sort()).toEqual(
+      ['crossplay_doctor', 'crossplay_read_trace', 'crossplay_scaffold', 'crossplay_test'].sort(),
+    );
+    await close();
+  });
 });
 
 describe('crossplay_doctor tool (B-105-03)', () => {
   test('is listed with a description and no required input', async () => {
     const { client, close } = await connected();
     const { tools } = await client.listTools();
-    expect(tools).toHaveLength(1);
-    expect(tools[0]).toMatchObject({ name: 'crossplay_doctor' });
+    const doctor = tools.find((t) => t.name === 'crossplay_doctor');
+    expect(doctor).toMatchObject({ name: 'crossplay_doctor' });
+    expect(doctor?.description).toBeTruthy();
     await close();
   });
 

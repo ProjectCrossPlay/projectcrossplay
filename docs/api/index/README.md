@@ -34,6 +34,7 @@
 - [WaitOptions](interfaces/WaitOptions.md)
 - [WaitResult](interfaces/WaitResult.md)
 - [WebTargetOptions](interfaces/WebTargetOptions.md)
+- [ZipEntry](interfaces/ZipEntry.md)
 
 ## Type Aliases
 
@@ -53,6 +54,8 @@
 - [defineConfig](functions/defineConfig.md)
 - [formatSelector](functions/formatSelector.md)
 - [loadDriver](functions/loadDriver.md)
+- [packZip](functions/packZip.md)
 - [readTrace](functions/readTrace.md)
 - [resolveTarget](functions/resolveTarget.md)
+- [unpackZip](functions/unpackZip.md)
 - [waitForElement](functions/waitForElement.md)
