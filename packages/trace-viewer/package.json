@@ -1,6 +1,6 @@
 {
   "name": "@projectcrossplay/trace-viewer",
-  "version": "0.1.0-dev.0",
+  "version": "0.1.0",
   "description": "CrossPlay trace-viewer: self-contained Preact bundle for crossplay show-trace (ADR-004)",
   "license": "Apache-2.0",
   "type": "module",

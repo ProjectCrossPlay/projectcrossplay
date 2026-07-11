@@ -1,6 +1,6 @@
 {
   "name": "@projectcrossplay/core",
-  "version": "0.1.0-dev.0",
+  "version": "0.1.0",
   "description": "CrossPlay core: unified test API, selector engine, auto-wait engine, trace writer, driver contract",
   "license": "Apache-2.0",
   "type": "module",

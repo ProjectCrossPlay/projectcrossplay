@@ -1,10 +1,14 @@
 # CrossPlay
 
+[![npm version](https://img.shields.io/npm/v/@projectcrossplay/cli.svg)](https://www.npmjs.com/package/@projectcrossplay/cli)
+[![License](https://img.shields.io/github/license/ProjectCrossPlay/projectcrossplay)](LICENSE)
+[![CI Status](https://img.shields.io/github/actions/workflow/status/ProjectCrossPlay/projectcrossplay/ci.yml?branch=main)](https://github.com/ProjectCrossPlay/projectcrossplay/actions)
+
 **One TypeScript API. One test spec. Web and native Android.**
 
 CrossPlay is an open source cross-platform test automation framework: write a user flow once and run it against your web app (Chromium, Firefox, WebKit — Playwright-backed) and your native Android app (UIAutomator2-backed, **no Appium server**), with Playwright-quality auto-waiting, unified selectors, and a portable trace for every run.
 
-> ⚠️ **Status: pre-release, under active development.** The v0.1.0 public release is in progress — API and docs will stabilize then. Watch the repo to follow along.
+> ℹ️ **Status: public v0.1.0 release.** Stable API and documentation are now live. See the quickstart guide to begin.
 
 ## Why
 

@@ -1,14 +1,19 @@
 #!/usr/bin/env node
 /** @projectcrossplay/cli (B-024, FR-060–062) — init | doctor | test | show-trace. */
+import { createRequire } from 'node:module';
 import { Command } from 'commander';
 import { doctor } from './doctor.js';
 import { init } from './init.js';
 import { showTrace } from './show-trace.js';
 import { testCmd } from './test-cmd.js';
 
+// Read from package.json rather than a hardcoded literal, so `--version`
+// can't silently drift from the actual published version.
+const { version } = createRequire(import.meta.url)('../package.json') as { version: string };
+
 const program = new Command();
 
-program.name('crossplay').description('One test API for web and native mobile').version('0.1.0-dev.0');
+program.name('crossplay').description('One test API for web and native mobile').version(version);
 
 program
   .command('init')

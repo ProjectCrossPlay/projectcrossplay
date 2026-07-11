@@ -1,0 +1,60 @@
+name: Release
+on:
+  push:
+    tags:
+      - 'v*'
+
+# id-token: write is required for npm provenance (Sigstore attestation via
+# GitHub's OIDC token); contents: read is the least-privilege default
+# (B-052/NFR-015) — nothing here needs to write repo contents.
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  # Re-verify from a clean checkout rather than trusting that main was green
+  # at some earlier point — the tag is the actual release artifact.
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+          registry-url: https://registry.npmjs.org
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build
+      - run: pnpm typecheck
+      - run: pnpm test
+      - run: pnpm audit --audit-level high
+
+  publish:
+    needs: verify
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+          registry-url: https://registry.npmjs.org
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build
+      # Publish order matters: core has no internal deps and must land
+      # first; driver-web/driver-android/trace-viewer only depend on core;
+      # cli depends on both core and trace-viewer, so it publishes last.
+      # `pnpm publish` (not npm) rewrites each package's `workspace:*` deps
+      # to the exact version being published, same as `pnpm pack` already
+      # does — verified against a real fresh-install during B-051.
+      - name: Publish packages (dependency order)
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          for pkg in core trace-viewer driver-web driver-android cli; do
+            echo "::group::publish @projectcrossplay/$pkg"
+            pnpm --filter @projectcrossplay/$pkg publish --access public --provenance --no-git-checks
+            echo "::endgroup::"
+          done
