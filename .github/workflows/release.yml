@@ -46,16 +46,27 @@ jobs:
       - run: pnpm build
       # Publish order matters: core has no internal deps and must land
       # first; driver-web/driver-android/trace-viewer only depend on core;
-      # cli depends on both core and trace-viewer, so it publishes last.
+      # cli depends on both core and trace-viewer; mcp-server depends on
+      # both core and cli, so it publishes last of all.
       # `pnpm publish` (not npm) rewrites each package's `workspace:*` deps
       # to the exact version being published, same as `pnpm pack` already
       # does — verified against a real fresh-install during B-051.
+      #
+      # Idempotent per package: packages don't all bump version together
+      # every release (mcp-server started fresh at 0.1.0 while the other 5
+      # were already at 0.1.1) — skip any package@version that's already on
+      # the registry instead of letting `pnpm publish` fail the whole job.
       - name: Publish packages (dependency order)
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
-          for pkg in core trace-viewer driver-web driver-android cli; do
+          for pkg in core trace-viewer driver-web driver-android cli mcp-server; do
             echo "::group::publish @projectcrossplay/$pkg"
-            pnpm --filter @projectcrossplay/$pkg publish --access public --provenance --no-git-checks
+            version=$(node -p "require('./packages/$pkg/package.json').version")
+            if npm view "@projectcrossplay/$pkg@$version" version >/dev/null 2>&1; then
+              echo "@projectcrossplay/$pkg@$version already published — skipping"
+            else
+              pnpm --filter @projectcrossplay/$pkg publish --access public --provenance --no-git-checks
+            fi
             echo "::endgroup::"
           done
