@@ -45,6 +45,24 @@ importers:
         specifier: ^3.2.4
         version: 3.2.7(@types/node@20.19.43)(yaml@2.9.0)
 
+  examples/quickstart-demo:
+    devDependencies:
+      '@projectcrossplay/cli':
+        specifier: ^0.1.0
+        version: 0.1.0(@types/node@20.19.43)(yaml@2.9.0)
+      '@projectcrossplay/core':
+        specifier: ^0.1.0
+        version: 0.1.0(vitest@3.2.7(@types/node@20.19.43)(yaml@2.9.0))
+      '@projectcrossplay/driver-web':
+        specifier: ^0.1.0
+        version: 0.1.0(vitest@3.2.7(@types/node@20.19.43)(yaml@2.9.0))
+      typescript:
+        specifier: ^5.5.4
+        version: 5.9.3
+      vitest:
+        specifier: ^3.2.4
+        version: 3.2.7(@types/node@20.19.43)(yaml@2.9.0)
+
   packages/cli:
     dependencies:
       '@projectcrossplay/core':
@@ -320,6 +338,25 @@ packages:
 
   '@oxc-project/types@0.139.0':
     resolution: {integrity: sha512-r9gHphtCs+1M7J0pw6Sn/hh/Wpa/iQrOOkrNAlVLF/gHq+/CJmHIWKKUUhdWjcD6CIa8idarspCsASiXCXvFUw==}
+
+  '@projectcrossplay/cli@0.1.0':
+    resolution: {integrity: sha512-1lCgrusbqXciEgdecRis2b8V5UJoD95YtQCh54H1SaxK2DexOHch/1kACGdsmbuXG51ewKH+jz59rIwCmlUKmg==}
+    engines: {node: ^20.19.0 || ^22.12.0 || >=24.0.0}
+    hasBin: true
+
+  '@projectcrossplay/core@0.1.0':
+    resolution: {integrity: sha512-Pkrc1z/zq+dIm7AYTAT2k1ChrOVni+3uu0ATD/GkUKpjzoiXawSVvlcpz45TUaXPFSBS6iQhwqcAZtI3o0B8hA==}
+    engines: {node: ^20.19.0 || ^22.12.0 || >=24.0.0}
+    peerDependencies:
+      vitest: ^3.2.4
+
+  '@projectcrossplay/driver-web@0.1.0':
+    resolution: {integrity: sha512-PELs9av9PE4SWq2+2/Tm7iWbTXkNlwiOhup1SpZrEdbdUZCTMFEa5YVqaCLsGK0AFksS+ePe9Slgt+JBgWdCPA==}
+    engines: {node: ^20.19.0 || ^22.12.0 || >=24.0.0}
+
+  '@projectcrossplay/trace-viewer@0.1.0':
+    resolution: {integrity: sha512-HsNbrQ7tF+0SdCV8ioPDDC2ofXKwNIx3TH9D3whAwXqMVsy9nOWmlYH+UL8iceSZgXhbsJtfep58i7HJxhxx8A==}
+    engines: {node: ^20.19.0 || ^22.12.0 || >=24.0.0}
 
   '@rolldown/binding-android-arm64@1.1.5':
     resolution: {integrity: sha512-lZg8fqIv2v7FF237bwMgzGZEJvGL79/s5knJ/i6FmsGF4XXlzccZ4jb+TrFIxtSSxFtIpdsgrPZeMk1I9AFcyQ==}
@@ -992,6 +1029,54 @@ snapshots:
     optional: true
 
   '@oxc-project/types@0.139.0': {}
+
+  '@projectcrossplay/cli@0.1.0(@types/node@20.19.43)(yaml@2.9.0)':
+    dependencies:
+      '@projectcrossplay/core': 0.1.0(vitest@3.2.7(@types/node@20.19.43)(yaml@2.9.0))
+      '@projectcrossplay/trace-viewer': 0.1.0(vitest@3.2.7(@types/node@20.19.43)(yaml@2.9.0))
+      commander: 15.0.0
+      vitest: 3.2.7(@types/node@20.19.43)(yaml@2.9.0)
+    transitivePeerDependencies:
+      - '@edge-runtime/vm'
+      - '@types/debug'
+      - '@types/node'
+      - '@vitejs/devtools'
+      - '@vitest/browser'
+      - '@vitest/ui'
+      - esbuild
+      - happy-dom
+      - jiti
+      - jsdom
+      - less
+      - msw
+      - preact-render-to-string
+      - sass
+      - sass-embedded
+      - stylus
+      - sugarss
+      - supports-color
+      - terser
+      - tsx
+      - yaml
+
+  '@projectcrossplay/core@0.1.0(vitest@3.2.7(@types/node@20.19.43)(yaml@2.9.0))':
+    dependencies:
+      vitest: 3.2.7(@types/node@20.19.43)(yaml@2.9.0)
+
+  '@projectcrossplay/driver-web@0.1.0(vitest@3.2.7(@types/node@20.19.43)(yaml@2.9.0))':
+    dependencies:
+      '@projectcrossplay/core': 0.1.0(vitest@3.2.7(@types/node@20.19.43)(yaml@2.9.0))
+      playwright: 1.61.1
+    transitivePeerDependencies:
+      - vitest
+
+  '@projectcrossplay/trace-viewer@0.1.0(vitest@3.2.7(@types/node@20.19.43)(yaml@2.9.0))':
+    dependencies:
+      '@projectcrossplay/core': 0.1.0(vitest@3.2.7(@types/node@20.19.43)(yaml@2.9.0))
+      preact: 10.29.7
+    transitivePeerDependencies:
+      - preact-render-to-string
+      - vitest
 
   '@rolldown/binding-android-arm64@1.1.5':
     optional: true

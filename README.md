@@ -52,6 +52,7 @@ The `spikes/` directory holds the validation spikes behind the architecture deci
 ## Docs
 
 - [Quickstart](docs/quickstart.md) — a passing test in under 15 minutes
+- [Onboarding Demo](examples/quickstart-demo) — a complete, standalone example project with a step-by-step walkthrough to get you started quickly
 - [Selectors](docs/selectors.md) — `by.testId`/`by.text`/`by.role`, and what each maps to per platform
 - [Architecture](docs/architecture.md) — how the pieces fit together
 - [Writing a driver](docs/driver-plugin.md) — implement `PlatformDriver` for another platform

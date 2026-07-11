@@ -1,0 +1,19 @@
+{
+  "name": "crossplay-quickstart-demo",
+  "version": "1.0.0",
+  "description": "Step-by-step CrossPlay quickstart demo project",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start-app": "node server.mjs",
+    "test": "crossplay test --target web",
+    "test:all": "crossplay test --target web,android"
+  },
+  "devDependencies": {
+    "@projectcrossplay/cli": "^0.1.0",
+    "@projectcrossplay/core": "^0.1.0",
+    "@projectcrossplay/driver-web": "^0.1.0",
+    "typescript": "^5.5.4",
+    "vitest": "^3.2.4"
+  }
+}
