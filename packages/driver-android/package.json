@@ -3,6 +3,15 @@
   "version": "0.1.0",
   "description": "CrossPlay driver-android (implementation lands per sprint plan)",
   "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ProjectCrossPlay/projectcrossplay.git",
+    "directory": "packages/driver-android"
+  },
+  "homepage": "https://github.com/ProjectCrossPlay/projectcrossplay#readme",
+  "bugs": {
+    "url": "https://github.com/ProjectCrossPlay/projectcrossplay/issues"
+  },
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
