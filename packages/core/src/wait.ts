@@ -48,11 +48,10 @@ export async function waitFor(
   let pollMs = INITIAL_POLL_MS;
   let boundsChanges = 0;
   let lastStable: { bounds: string; at: number } | null = null;
-  // What we were still waiting on when time ran out:
-  let failing: { condition: WaitLogEntry['condition']; detail: string } = {
-    condition: 'present',
-    detail: 'not found',
-  };
+  // What we were still waiting on when time ran out — always (re)assigned
+  // before use: every loop branch that reaches the timeout check below
+  // assigns it first, so the old placeholder initial value was dead code.
+  let failing!: { condition: WaitLogEntry['condition']; detail: string };
 
   for (;;) {
     const found = await session.findElements(selector);

@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "description": "CrossPlay core: unified test API, selector engine, auto-wait engine, trace writer, driver contract",
   "license": "Apache-2.0",
+  "keywords": ["testing", "e2e", "automation", "cross-platform", "crossplay"],
   "repository": {
     "type": "git",
     "url": "https://github.com/ProjectCrossPlay/projectcrossplay.git",
@@ -43,7 +44,7 @@
     "build": "tsc -p tsconfig.json",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "test": "vitest run",
-    "lint": "echo 'lint configured in Sprint 2 (B-020)'"
+    "lint": "eslint src tests"
   },
   "peerDependencies": {
     "vitest": "^3.2.4"
