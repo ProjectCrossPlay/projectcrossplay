@@ -18,7 +18,6 @@ export interface CrossPlayFixtures {
 }
 
 export const test = base.extend<CrossPlayFixtures>({
-  // eslint-disable-next-line no-empty-pattern
   app: async ({ task }, use) => {
     const rt = inject('crossplay');
     const spec = `${task.file.name} › ${task.name}`;

@@ -1,8 +1,9 @@
 {
   "name": "@projectcrossplay/driver-android",
   "version": "0.1.0",
-  "description": "CrossPlay driver-android (implementation lands per sprint plan)",
+  "description": "CrossPlay driver-android: UIAutomator2-backed PlatformDriver for native, React Native, and Kotlin/Java Android apps",
   "license": "Apache-2.0",
+  "keywords": ["testing", "e2e", "automation", "android", "appium", "cross-platform", "crossplay"],
   "repository": {
     "type": "git",
     "url": "https://github.com/ProjectCrossPlay/projectcrossplay.git",
@@ -25,7 +26,7 @@
     "build": "tsc -p tsconfig.json",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "test": "vitest run",
-    "lint": "echo 'lint configured in Sprint 2'"
+    "lint": "eslint src tests"
   },
   "dependencies": {
     "@projectcrossplay/core": "workspace:*",

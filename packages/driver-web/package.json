@@ -1,8 +1,9 @@
 {
   "name": "@projectcrossplay/driver-web",
   "version": "0.1.0",
-  "description": "CrossPlay driver-web (implementation lands per sprint plan)",
+  "description": "CrossPlay driver-web: Playwright-backed PlatformDriver for Chromium, Firefox, and WebKit",
   "license": "Apache-2.0",
+  "keywords": ["testing", "e2e", "automation", "playwright", "cross-platform", "crossplay"],
   "repository": {
     "type": "git",
     "url": "https://github.com/ProjectCrossPlay/projectcrossplay.git",
@@ -24,14 +25,19 @@
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "typecheck": "tsc -p tsconfig.json --noEmit",
-    "test": "echo 'no tests yet'",
-    "lint": "echo 'lint configured in Sprint 2'"
+    "test": "vitest run",
+    "lint": "eslint src tests"
   },
   "dependencies": {
     "@projectcrossplay/core": "workspace:*",
     "playwright": "~1.61.1"
   },
+  "peerDependencies": {
+    "vitest": "^3.2.4"
+  },
   "devDependencies": {
-    "typescript": "^5.5.4"
+    "@types/node": "^20.19.43",
+    "typescript": "^5.5.4",
+    "vitest": "^3.2.4"
   }
 }

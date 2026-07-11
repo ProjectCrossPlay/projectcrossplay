@@ -27,6 +27,7 @@ jobs:
       # build first: cross-package type resolution needs core's dist/ (topological order)
       - run: pnpm build
       - run: pnpm typecheck
+      - run: pnpm lint
       - run: pnpm test
       # Supply-chain gate (NFR-015): fail on high/critical advisories
       - run: pnpm audit --audit-level high

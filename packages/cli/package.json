@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "description": "CrossPlay CLI: init, doctor, test, show-trace",
   "license": "Apache-2.0",
+  "keywords": ["testing", "e2e", "automation", "cli", "cross-platform", "crossplay"],
   "repository": {
     "type": "git",
     "url": "https://github.com/ProjectCrossPlay/projectcrossplay.git",
@@ -28,7 +29,7 @@
     "build": "tsc -p tsconfig.json",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "test": "echo 'CLI smoke-tested via examples/demo-web (unit tests in Sprint 2 QA pass)'",
-    "lint": "echo 'lint configured in Sprint 2'"
+    "lint": "eslint src"
   },
   "dependencies": {
     "@projectcrossplay/core": "workspace:*",
