@@ -1,6 +1,6 @@
 {
   "name": "@projectcrossplay/driver-web",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "CrossPlay driver-web: Playwright-backed PlatformDriver for Chromium, Firefox, and WebKit",
   "license": "Apache-2.0",
   "keywords": ["testing", "e2e", "automation", "playwright", "cross-platform", "crossplay"],

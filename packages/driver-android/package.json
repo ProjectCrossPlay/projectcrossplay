@@ -1,6 +1,6 @@
 {
   "name": "@projectcrossplay/driver-android",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "CrossPlay driver-android: UIAutomator2-backed PlatformDriver for native, React Native, and Kotlin/Java Android apps",
   "license": "Apache-2.0",
   "keywords": ["testing", "e2e", "automation", "android", "appium", "cross-platform", "crossplay"],

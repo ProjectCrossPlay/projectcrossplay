@@ -8,7 +8,7 @@
 
 CrossPlay is an open source cross-platform test automation framework: write a user flow once and run it against your web app (Chromium, Firefox, WebKit — Playwright-backed) and your native Android app (UIAutomator2-backed, **no Appium server**), with Playwright-quality auto-waiting, unified selectors, and a portable trace for every run.
 
-> ℹ️ **Status: public v0.1.0 release.** Stable API and documentation are now live. See the quickstart guide to begin.
+> ℹ️ **Status: public release.** Stable API and documentation are now live — see the npm badge above for the current version. See the quickstart guide to begin.
 
 ## Why
 

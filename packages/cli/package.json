@@ -1,6 +1,6 @@
 {
   "name": "@projectcrossplay/cli",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "CrossPlay CLI: init, doctor, test, show-trace",
   "license": "Apache-2.0",
   "keywords": ["testing", "e2e", "automation", "cli", "cross-platform", "crossplay"],
